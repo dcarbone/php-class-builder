@@ -1,0 +1,32 @@
+{
+    "name": "dcarbone/php-class-builder",
+    "type": "library",
+    "description": "PHP Tools for programmatically writing class files",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Daniel Carbone",
+            "email": "daniel.p.carbone@gmail.com"
+        }
+    ],
+    "keywords": [
+        "php",
+        "class builder",
+        "builder"
+    ],
+
+    "require": {
+        "php": ">=5.3.3",
+        "myclabs/php-enum": "1.4.*"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "DCarbone\\PHPClassBuilder\\": "src/"
+        }
+    }
+}
