@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Structure;
+<?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Definition\Comment;
+use DCarbone\PHPClassBuilder\Template\Comment;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
  * Class InterfaceDefinition
- * @package DCarbone\PHPClassBuilder\Definition
+ * @package DCarbone\PHPClassBuilder\Template
  */
-class InterfaceDefinition extends AbstractStructureDefinition
+class InterfaceDefinition extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
@@ -33,7 +33,7 @@ class InterfaceDefinition extends AbstractStructureDefinition
     private $_methods = array();
     /** @var null|string */
     private $_namespace;
-    /** @var \DCarbone\PHPClassBuilder\Definition\Comment\AbstractCommentDefinition[] */
+    /** @var \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate[] */
     private $_preDeclarationComments = array();
 
     /**
@@ -140,7 +140,7 @@ class InterfaceDefinition extends AbstractStructureDefinition
     }
 
     /**
-     * @return Comment\AbstractCommentDefinition[]
+     * @return Comment\AbstractCommentTemplate[]
      */
     public function getPreDeclarationComments()
     {
@@ -148,7 +148,7 @@ class InterfaceDefinition extends AbstractStructureDefinition
     }
 
     /**
-     * @param Comment\AbstractCommentDefinition[] $preDeclarationComments
+     * @param Comment\AbstractCommentTemplate[] $preDeclarationComments
      */
     public function setPreDeclarationComments($preDeclarationComments)
     {

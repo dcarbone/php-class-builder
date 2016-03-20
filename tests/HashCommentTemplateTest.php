@@ -17,67 +17,67 @@
  */
 
 /**
- * Class HashCommentDefinitionTest
+ * Class HashCommentTemplateTest
  */
-class HashCommentDefinitionTest extends PHPUnit_Framework_TestCase
+class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition
+     * @return \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate
      */
     public function testCanConstructComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
-        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Definition\\Comment\\HashCommentDefinition', $comment);
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\HashCommentTemplate', $comment);
         return $comment;
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      */
     public function testCanGetEmptyComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $this->assertEmpty($comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      */
     public function testCanAddLineToComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $comment->addLine('woop woop');
         $this->assertEquals("    # woop woop\n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::addLines
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addLines
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      */
     public function testCanAddMultipleLines()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $comment->addLines(array('quiet line', 'LOUD LINE'));
         $this->assertEquals("    # quiet line\n    # LOUD LINE\n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::compile
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::addEmptyLine
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addEmptyLine
      */
     public function testCanAddEmptyLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $comment->addEmptyLine();
         $this->assertEquals("    # \n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::getLines
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::getLines
      */
     public function testCanGetLinesArray()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $lines = array(
             'neato line',
             'super neato line'
@@ -87,20 +87,20 @@ class HashCommentDefinitionTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::count
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
      */
     public function testCountReturnsZeroWhenEmpty()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $this->assertEquals(0, count($comment));
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition::count
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
      */
     public function testCanGetCorrectCount()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\HashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
         $comment->addLines(array(
             1,2,3,4,5
         ));

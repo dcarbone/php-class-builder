@@ -17,36 +17,36 @@
  */
 
 /**
- * Class SlashCommentDefinitionTest
+ * Class SlashCommentTemplateTest
  */
-class SlashCommentDefinitionTest extends PHPUnit_Framework_TestCase
+class SlashCommentTemplateTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition
+     * @return \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate
      */
     public function testCanConstructComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition();
-        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Definition\\Comment\\SlashCommentDefinition', $comment);
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SlashCommentTemplate', $comment);
         return $comment;
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
      */
     public function testCanGetEmptyComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
         $this->assertEquals('', $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition::addLine
-     * @covers \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::addLine
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
      */
     public function testCanAddLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Definition\Comment\SlashCommentDefinition();
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
         $comment->addLine('super great comment');
         $this->assertEquals("    // super great comment\n", $comment->compile());
     }

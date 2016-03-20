@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Comment;
+<?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,10 +17,10 @@
  */
 
 /**
- * Class SingleStarCommentDefinition
- * @package DCarbone\PHPClassBuilder\Definition\Comment
+ * Class SingleStarCommentTemplate
+ * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-class SingleStarCommentDefinition extends AbstractCommentDefinition
+class SingleStarCommentTemplate extends AbstractCommentTemplate
 {
     /** @var bool */
     private $_useBang = false;

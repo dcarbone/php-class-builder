@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Comment;
+<?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,30 +17,11 @@
  */
 
 /**
- * Class DoubleStarCommentDefinition
- * @package DCarbone\PHPClassBuilder\Definition\Comment
+ * Class SlashCommentTemplate
+ * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-class DoubleStarCommentDefinition extends AbstractCommentDefinition
+class SlashCommentTemplate extends AbstractCommentTemplate
 {
-    /** @var bool */
-    private $_useBang = false;
-
-    /**
-     * @return bool
-     */
-    public function usesBang()
-    {
-        return $this->_useBang;
-    }
-
-    /**
-     * @param bool|true $useBang
-     */
-    public function setUseBang($useBang = true)
-    {
-        $this->_useBang = (bool)$useBang;
-    }
-
     /**
      * @param array $args
      * @return string
@@ -49,12 +30,12 @@ class DoubleStarCommentDefinition extends AbstractCommentDefinition
     {
         list($leadingSpaces) = $this->parseCompileArgs($args);
 
-        $spaces = str_repeat(' ', $leadingSpaces);
-        $output = sprintf("%s/**%s\n", $spaces, $this->usesBang() ? '!' : '');
+        $output = '';
+        $leadingSpaces = str_repeat(' ', $leadingSpaces);
         foreach($this->getLines() as $line)
         {
-            $output = sprintf("%s%s * %s\n", $output, $spaces, $line);
+            $output = sprintf("%s%s// %s\n", $output, $leadingSpaces, $line);
         }
-        return sprintf("%s%s */\n", $output, $spaces);
+        return $output;
     }
 }

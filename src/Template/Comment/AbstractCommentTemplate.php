@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Comment;
+<?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Definition\AbstractDefinition;
+use DCarbone\PHPClassBuilder\Template\AbstractTemplate;
 
 /**
- * Class AbstractCommentDefinition
- * @package DCarbone\PHPClassBuilder\Definition\Comment
+ * Class AbstractCommentTemplate
+ * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-abstract class AbstractCommentDefinition extends AbstractDefinition implements \Countable
+abstract class AbstractCommentTemplate extends AbstractTemplate implements \Countable
 {
     const NEWLINE_TEST = '{(\r\n)|\n|\r}S';
 

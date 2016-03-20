@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Structure;
+<?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,9 +20,9 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
  * Class ClassDefinition
- * @package DCarbone\PHPClassBuilder\Definition
+ * @package DCarbone\PHPClassBuilder\Template
  */
-class ClassDefinition extends AbstractStructureDefinition
+class ClassDefinition extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
@@ -38,7 +38,7 @@ class ClassDefinition extends AbstractStructureDefinition
     private $_properties = array();
     /** @var null|string */
     private $_namespace;
-    /** @var \DCarbone\PHPClassBuilder\Definition\Comment\AbstractCommentDefinition[] */
+    /** @var \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate[] */
     private $_preDeclarationComments = array();
 
     /**

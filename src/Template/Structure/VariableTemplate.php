@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Structure;
+<?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Definition\Comment\DoubleStarCommentDefinition;
+use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
 use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
  * Class VariableDefinition
- * @package DCarbone\PHPClassBuilder\Definition
+ * @package DCarbone\PHPClassBuilder\Template
  */
-class VariableDefinition extends AbstractStructureDefinition
+class VariableDefinition extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name;
@@ -204,7 +204,7 @@ class VariableDefinition extends AbstractStructureDefinition
 
     /**
      * @param bool|false $annotationOnly
-     * @return DoubleStarCommentDefinition|string
+     * @return DoubleStarCommentTemplate|string
      */
     public function getClassPropertyComment($annotationOnly = false)
     {
@@ -218,7 +218,7 @@ class VariableDefinition extends AbstractStructureDefinition
         if ($annotationOnly)
             return $annotation;
 
-        $comment = new DoubleStarCommentDefinition();
+        $comment = new DoubleStarCommentTemplate();
         $comment->addLine($annotation);
 
         return $comment;

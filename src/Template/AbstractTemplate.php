@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition;
+<?php namespace DCarbone\PHPClassBuilder\Template;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Definition\Comment\DoubleStarCommentDefinition;
 use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidMethodNameException;
@@ -24,10 +23,10 @@ use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException;
 
 /**
- * Class AbstractDefinition
- * @package DCarbone\PHPClassBuilder\Definition
+ * Class AbstractTemplate
+ * @package DCarbone\PHPClassBuilder\Template
  */
-abstract class AbstractDefinition
+abstract class AbstractTemplate
 {
     /**
      * TODO: This method of passing arguments is flawed and could become cumbersome quickly.

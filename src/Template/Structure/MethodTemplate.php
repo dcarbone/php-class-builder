@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Structure;
+<?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -21,9 +21,9 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
  * Class MethodDefinition
- * @package DCarbone\PHPClassBuilder\Definition\Method
+ * @package DCarbone\PHPClassBuilder\Template\Method
  */
-class MethodDefinition extends AbstractStructureDefinition
+class MethodDefinition extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
@@ -100,7 +100,7 @@ class MethodDefinition extends AbstractStructureDefinition
     }
 
     /**
-     * @return \DCarbone\PHPClassBuilder\Definition\Structure\VariableDefinition[]
+     * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableDefinition[]
      */
     public function getParameters()
     {

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPClassBuilder\Definition\Structure;
+<?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,33 +16,33 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Definition\AbstractDefinition;
-use DCarbone\PHPClassBuilder\Definition\Comment\DoubleStarCommentDefinition;
+use DCarbone\PHPClassBuilder\Template\AbstractTemplate;
+use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
 
 /**
- * Class AbstractStructureDefinition
- * @package DCarbone\PHPClassBuilder\Definition\Structure
+ * Class AbstractStructureTemplate
+ * @package DCarbone\PHPClassBuilder\Template\Structure
  */
-abstract class AbstractStructureDefinition extends AbstractDefinition
+abstract class AbstractStructureTemplate extends AbstractTemplate
 {
-    /** @var DoubleStarCommentDefinition */
+    /** @var DoubleStarCommentTemplate */
     protected $docBlockComment;
 
     /**
-     * @return DoubleStarCommentDefinition
+     * @return DoubleStarCommentTemplate
      */
     public function getDocBlockComment()
     {
         if (!isset($this->docBlockComment))
-            $this->docBlockComment = new DoubleStarCommentDefinition();
+            $this->docBlockComment = new DoubleStarCommentTemplate();
 
         return $this->docBlockComment;
     }
 
     /**
-     * @param DoubleStarCommentDefinition $docBlockComment
+     * @param DoubleStarCommentTemplate $docBlockComment
      */
-    public function setDocBlockComment(DoubleStarCommentDefinition $docBlockComment)
+    public function setDocBlockComment(DoubleStarCommentTemplate $docBlockComment)
     {
         $this->docBlockComment = $docBlockComment;
     }
