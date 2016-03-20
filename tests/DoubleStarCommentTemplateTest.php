@@ -24,7 +24,7 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @return \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate
      */
-    public function testCanConstructComment()
+    public function testCanConstructCommentWithoutText()
     {
         $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
@@ -34,7 +34,7 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
-     * @depends testCanConstructComment
+     * @depends testCanConstructCommentWithoutText
      * @param \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment
      */
     public function testCanGetEmptyComment(\DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment)
@@ -69,6 +69,16 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
         $output = $comment->compile();
         $this->assertEquals("    /**\n     * this crazy comment\n     * extends across 2 lines!\n     */\n", $output);
         return $comment;
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::__construct
+     */
+    public function testCanConstructCommentWithText()
+    {
+        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate("really cool\ncomment");
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
+        $this->assertEquals("    /**\n     * really cool\n     * comment\n     */\n", $comment->compile());
     }
 
     /**

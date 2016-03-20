@@ -30,6 +30,17 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     private $_lines = array();
 
     /**
+     * Constructor
+     *
+     * @param string $text
+     */
+    public function __construct($text = null)
+    {
+        if (null !== $text)
+            $this->addLine($text);
+    }
+
+    /**
      * @param string $line
      */
     public function addLine($line = '')
@@ -143,10 +154,10 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      */
     protected function parseCompileArgs(array $args)
     {
-        static $defaults = array(4);
+        static $defaults = array('leadingSpaces' => 4);
 
         if (0 === count($args))
-            return $defaults;
+            return array($defaults['leadingSpaces']);
 
         if (isset($args['leadingSpaces']) && is_int($args['leadingSpaces']) && $args['leadingSpaces'] >= 0)
             return array($args['leadingSpaces']);
