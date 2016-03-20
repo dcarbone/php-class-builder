@@ -19,22 +19,22 @@
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
- * Class ClassDefinition
+ * Class ClassTemplate
  * @package DCarbone\PHPClassBuilder\Template
  */
-class ClassDefinition extends AbstractStructureTemplate
+class ClassTemplate extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
-    /** @var string|ClassDefinition */
+    /** @var string|ClassTemplate */
     private $_parent = null;
-    /** @var string[]|InterfaceDefinition[] */
+    /** @var string[]|InterfaceTemplate[] */
     private $_interfaces = array();
     /** @var bool */
     private $_abstract = false;
-    /** @var MethodDefinition[] */
+    /** @var MethodTemplate[] */
     private $_methods = array();
-    /** @var VariableDefinition[] */
+    /** @var VariableTemplate[] */
     private $_properties = array();
     /** @var null|string */
     private $_namespace;
@@ -46,7 +46,7 @@ class ClassDefinition extends AbstractStructureTemplate
      *
      * @param string|null $name
      * @param string|null $namespace
-     * @param null|string|ClassDefinition $parent
+     * @param null|string|ClassTemplate $parent
      * @param bool|false $abstract
      */
     public function __construct($name = null, $namespace = null, $parent = null, $abstract = false)
@@ -97,7 +97,7 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return ClassDefinition|string
+     * @return ClassTemplate|string
      */
     public function getParent()
     {
@@ -105,7 +105,7 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param ClassDefinition|string $parent
+     * @param ClassTemplate|string $parent
      */
     public function setParent($parent)
     {
@@ -113,7 +113,7 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return InterfaceDefinition[]|string[]
+     * @return InterfaceTemplate[]|string[]
      */
     public function getInterfaces()
     {
@@ -121,11 +121,11 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param InterfaceDefinition|string $interface
+     * @param InterfaceTemplate|string $interface
      */
     public function addInterface($interface)
     {
-        if ($interface instanceof InterfaceDefinition)
+        if ($interface instanceof InterfaceTemplate)
             $this->_interfaces[$interface->getName()] = $interface;
         else
             $this->_interfaces[$interface] = $interface;
@@ -145,7 +145,7 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return MethodDefinition[]
+     * @return MethodTemplate[]
      */
     public function getMethods()
     {
@@ -153,9 +153,9 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param MethodDefinition $method
+     * @param MethodTemplate $method
      */
-    public function addMethod(MethodDefinition $method)
+    public function addMethod(MethodTemplate $method)
     {
         $this->_methods[$method->getName()] = $method;
     }
@@ -171,7 +171,7 @@ class ClassDefinition extends AbstractStructureTemplate
 
     /**
      * @param string $name
-     * @return MethodDefinition|null
+     * @return MethodTemplate|null
      */
     public function getMethod($name)
     {
@@ -182,7 +182,7 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return VariableDefinition[]
+     * @return VariableTemplate[]
      */
     public function getProperties()
     {
@@ -190,9 +190,9 @@ class ClassDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param VariableDefinition $property
+     * @param VariableTemplate $property
      */
-    public function addProperty(VariableDefinition $property)
+    public function addProperty(VariableTemplate $property)
     {
         $this->_properties[$property->getName()] = $property;
     }
@@ -208,7 +208,7 @@ class ClassDefinition extends AbstractStructureTemplate
 
     /**
      * @param string $name
-     * @return VariableDefinition|null
+     * @return VariableTemplate|null
      */
     public function getProperty($name)
     {
@@ -282,7 +282,7 @@ class ClassDefinition extends AbstractStructureTemplate
 
         if ($parent = $this->getParent())
         {
-            if ($parent instanceof ClassDefinition)
+            if ($parent instanceof ClassTemplate)
                 $output = sprintf('%sextends %s', $parent->getName());
             else
                 $output = sprintf('%sextends %s', $parent);
@@ -293,7 +293,7 @@ class ClassDefinition extends AbstractStructureTemplate
             $interfaces = array();
             foreach($this->_interfaces as $interface)
             {
-                if ($interface instanceof InterfaceDefinition)
+                if ($interface instanceof InterfaceTemplate)
                     $interfaces[] = $interface->getName();
                 else
                     $interfaces[] = substr($interface, strrpos($interface, '\\'));
@@ -340,7 +340,7 @@ class ClassDefinition extends AbstractStructureTemplate
 
         if ($this->_parent)
         {
-            if ($this->_parent instanceof ClassDefinition)
+            if ($this->_parent instanceof ClassTemplate)
                 $usedClasses[] = $this->_parent->getFullyQualifiedName();
             else
                 $usedClasses[] = $this->_parent;
@@ -350,7 +350,7 @@ class ClassDefinition extends AbstractStructureTemplate
         {
             foreach($this->_interfaces as $interface)
             {
-                if ($interface instanceof InterfaceDefinition)
+                if ($interface instanceof InterfaceTemplate)
                     $usedClasses[] = $interface->getFullyQualifiedName();
                 else
                     $usedClasses[] = $interface;

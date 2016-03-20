@@ -20,14 +20,14 @@ use DCarbone\PHPClassBuilder\Template\Comment;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
- * Class InterfaceDefinition
+ * Class InterfaceTemplate
  * @package DCarbone\PHPClassBuilder\Template
  */
-class InterfaceDefinition extends AbstractStructureTemplate
+class InterfaceTemplate extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
-    /** @var string[]|InterfaceDefinition[] */
+    /** @var string[]|InterfaceTemplate[] */
     private $_interfaces = array();
     /** @var array */
     private $_methods = array();
@@ -68,7 +68,7 @@ class InterfaceDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return InterfaceDefinition[]|string[]
+     * @return InterfaceTemplate[]|string[]
      */
     public function getInterfaces()
     {
@@ -76,7 +76,7 @@ class InterfaceDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param InterfaceDefinition[]|string[] $interfaces
+     * @param InterfaceTemplate[]|string[] $interfaces
      */
     public function setInterfaces($interfaces)
     {
@@ -84,7 +84,7 @@ class InterfaceDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return MethodDefinition[]
+     * @return MethodTemplate[]
      */
     public function getMethods()
     {
@@ -92,9 +92,9 @@ class InterfaceDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param MethodDefinition $method
+     * @param MethodTemplate $method
      */
-    public function addMethod(MethodDefinition $method)
+    public function addMethod(MethodTemplate $method)
     {
         $this->_methods[$method->getName()] = $method;
     }
@@ -110,7 +110,7 @@ class InterfaceDefinition extends AbstractStructureTemplate
 
     /**
      * @param string $name
-     * @return MethodDefinition|null
+     * @return MethodTemplate|null
      */
     public function getMethod($name)
     {

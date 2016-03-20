@@ -21,10 +21,10 @@ use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
- * Class VariableDefinition
+ * Class VariableTemplate
  * @package DCarbone\PHPClassBuilder\Template
  */
-class VariableDefinition extends AbstractStructureTemplate
+class VariableTemplate extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name;

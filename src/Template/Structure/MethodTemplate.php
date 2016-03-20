@@ -20,10 +20,10 @@ use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
- * Class MethodDefinition
+ * Class MethodTemplate
  * @package DCarbone\PHPClassBuilder\Template\Method
  */
-class MethodDefinition extends AbstractStructureTemplate
+class MethodTemplate extends AbstractStructureTemplate
 {
     /** @var string */
     private $_name = null;
@@ -33,7 +33,7 @@ class MethodDefinition extends AbstractStructureTemplate
     private $_static = false;
     /** @var bool */
     private $_abstract = false;
-    /** @var VariableDefinition[] */
+    /** @var VariableTemplate[] */
     private $_parameters = array();
     /** @var string[] */
     private $_body = array();
@@ -100,7 +100,7 @@ class MethodDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableDefinition[]
+     * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate[]
      */
     public function getParameters()
     {
@@ -108,9 +108,9 @@ class MethodDefinition extends AbstractStructureTemplate
     }
 
     /**
-     * @param VariableDefinition $parameter
+     * @param VariableTemplate $parameter
      */
-    public function addParameter(VariableDefinition $parameter)
+    public function addParameter(VariableTemplate $parameter)
     {
         $this->_parameters[$parameter->getName()] = $parameter;
     }
@@ -126,7 +126,7 @@ class MethodDefinition extends AbstractStructureTemplate
 
     /**
      * @param string $name
-     * @return VariableDefinition|null
+     * @return VariableTemplate|null
      */
     public function getParameter($name)
     {
