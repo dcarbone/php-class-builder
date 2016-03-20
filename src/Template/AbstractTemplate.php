@@ -16,10 +16,13 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Exception\FilePartNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException;
+use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidMethodNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
 use DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException;
 
 /**
@@ -116,6 +119,45 @@ abstract class AbstractTemplate
             $this->_determineExceptionValueOutput($actualValue),
             $arg,
             $expectedStatement
+        ));
+    }
+
+    /**
+     * @param mixed $sought
+     * @return \OutOfBoundsException
+     */
+    protected function createFilePartNotFoundException($sought)
+    {
+        return new FilePartNotFoundException(sprintf(
+            '%s - Specified invalid offset "%s".',
+            get_class($this),
+            $this->_determineExceptionValueOutput($sought)
+        ));
+    }
+
+    /**
+     * @param mixed $part
+     * @return InvalidFilePartException
+     */
+    protected function createInvalidFilePartException($part)
+    {
+        return new InvalidFilePartException(sprintf(
+            '%s - Files may only contain Comments and Structures, attempted to add "%s".',
+            get_class($this),
+            $this->_determineExceptionValueOutput($part)
+        ));
+    }
+
+    /**
+     * @param mixed $path
+     * @return InvalidOutputPathException
+     */
+    protected function createInvalidOutputPathException($path)
+    {
+        return new InvalidOutputPathException(sprintf(
+            '%s - Specified output path "%s" does not appear to be a valid filepath.',
+            get_class($path),
+            $this->_determineExceptionValueOutput($path)
         ));
     }
 

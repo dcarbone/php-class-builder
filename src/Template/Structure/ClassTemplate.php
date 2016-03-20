@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\FileTemplate;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
@@ -38,8 +39,9 @@ class ClassTemplate extends AbstractStructureTemplate
     private $_properties = array();
     /** @var null|string */
     private $_namespace;
-    /** @var \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate[] */
-    private $_preDeclarationComments = array();
+
+    /** @var FileTemplate */
+    private $_file = null;
 
     /**
      * Constructor
@@ -219,6 +221,36 @@ class ClassTemplate extends AbstractStructureTemplate
     }
 
     /**
+     * @return FileTemplate
+     */
+    public function getFile()
+    {
+        if (null === $this->_file)
+        {
+            $this->_file = new FileTemplate();
+            $this->_file->setClass($this);
+        }
+
+        return $this->_file;
+    }
+
+    /**
+     * @return bool
+     */
+    public function inFile()
+    {
+        return isset($this->_file);
+    }
+
+    /**
+     * @param FileTemplate $file
+     */
+    public function setFile(FileTemplate $file)
+    {
+        $this->_file = $file;
+    }
+
+    /**
      * @param bool $includeLeadingSlash
      * @return string
      */
@@ -259,15 +291,19 @@ class ClassTemplate extends AbstractStructureTemplate
         if (null === $this->_name)
             throw $this->createInvalidClassNameException($this->_name);
 
-        $ns = $this->getNamespace();
-        if ('' === (string)$ns)
-            $output = "<?php\n\n";
-        else
-            $output = sprintf("<?php namespace %s;\n\n", $ns);
+        list($inFile) = $this->parseCompileArgs($args);
 
-        foreach($this->_preDeclarationComments as $comment)
+        if ($inFile)
         {
-            $output = sprintf("%s\n%s\n", $output, $comment->compile());
+            $output = '';
+        }
+        else
+        {
+            $ns = $this->getNamespace();
+            if ('' === (string)$ns)
+                $output = "<?php\n\n";
+            else
+                $output = sprintf("<?php namespace %s;\n\n", $ns);
         }
 
         $output = sprintf("%s\n%s", $output, $this->_compileUseStatements());
@@ -323,7 +359,18 @@ class ClassTemplate extends AbstractStructureTemplate
      */
     protected function parseCompileArgs(array $args)
     {
-        // Nothing to do here yet...
+        static $defaults = array('inFile' => true);
+
+        if (0 === count($args))
+            return array($defaults['inFile']);
+
+        if (isset($args['inFile']) && is_bool($args['inFile']))
+            return array($args['inFile']);
+
+        throw $this->createInvalidCompileArgumentValueException(
+            'inFile', 'boolean value',
+            isset($args['inFile']) ? $args['inFile'] : 'UNDEFINED'
+        );
     }
 
     /**
