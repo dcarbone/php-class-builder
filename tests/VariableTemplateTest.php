@@ -253,4 +253,48 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
         $variable->setDefaultValueStatement('array()');
         $this->assertEquals('array()', $variable->getDefaultValueStatement());
     }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getClassPropertyComment
+     */
+    public function testCanGetClassPropertyComment()
+    {
+        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $comment = $variable->getClassPropertyComment();
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
+        $this->assertEquals("    /**\n     * @var mixed\n     */\n", $comment->compile());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterComment
+     */
+    public function testCanGetMethodParameterComment()
+    {
+        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $comment = $variable->getMethodParameterComment();
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
+        $this->assertEquals("    /**\n     * @param mixed \$testvar\n     */\n", $comment->compile());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getClassPropertyComment
+     */
+    public function testCanGetClassPropertyAnnotation()
+    {
+        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $annotation = $variable->getClassPropertyComment(true);
+        $this->assertInternalType('string', $annotation);
+        $this->assertEquals('@var mixed', $annotation);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterComment
+     */
+    public function testCanGetMethodParameterAnnotation()
+    {
+        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $annotation = $variable->getMethodParameterComment(true);
+        $this->assertInternalType('string', $annotation);
+        $this->assertEquals('@param mixed $testvar', $annotation);
+    }
 }

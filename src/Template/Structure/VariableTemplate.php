@@ -209,7 +209,25 @@ class VariableTemplate extends AbstractStructureTemplate
     public function getClassPropertyComment($annotationOnly = false)
     {
         $annotation = sprintf(
-            '@var %s $%s%s',
+            '@var %s%s',
+            $this->getPHPType(),
+            $this->isCollection() ? '[]' : ''
+        );
+
+        if ($annotationOnly)
+            return $annotation;
+
+        return new DoubleStarCommentTemplate($annotation);
+    }
+
+    /**
+     * @param bool|false $annotationOnly
+     * @return DoubleStarCommentTemplate|string
+     */
+    public function getMethodParameterComment($annotationOnly = false)
+    {
+        $annotation = sprintf(
+            '@param %s $%s%s',
             $this->getPHPType(),
             $this->getName(),
             $this->isCollection() ? '[]' : ''
@@ -218,10 +236,7 @@ class VariableTemplate extends AbstractStructureTemplate
         if ($annotationOnly)
             return $annotation;
 
-        $comment = new DoubleStarCommentTemplate();
-        $comment->addLine($annotation);
-
-        return $comment;
+        return new DoubleStarCommentTemplate($annotation);
     }
 
     /**

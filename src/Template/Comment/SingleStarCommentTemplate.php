@@ -25,6 +25,9 @@ class SingleStarCommentTemplate extends AbstractCommentTemplate
     /** @var bool */
     private $_useBang = false;
 
+    /** @var bool */
+    private $_singleLineOutput = false;
+
     /**
      * @return bool
      */
@@ -42,6 +45,22 @@ class SingleStarCommentTemplate extends AbstractCommentTemplate
     }
 
     /**
+     * @param bool|true $singleLineOutput
+     */
+    public function setSingleLineOutput($singleLineOutput = true)
+    {
+        $this->_singleLineOutput = (bool)$singleLineOutput;
+    }
+
+    /**
+     * @return bool
+     */
+    public function onSingleLine()
+    {
+        return $this->_singleLineOutput;
+    }
+
+    /**
      * @param array $args
      * @return string
      */
@@ -50,8 +69,13 @@ class SingleStarCommentTemplate extends AbstractCommentTemplate
         list($leadingSpaces) = $this->parseCompileArgs($args);
 
         $spaces = str_repeat(' ', $leadingSpaces);
+        $lines = $this->getLines();
+
+        if ($this->onSingleLine())
+            return sprintf("%s/*%s %s */\n", $spaces, $this->usesBang() ? '!' : '', reset($lines));
+
         $output = sprintf("%s/*%s\n", $spaces, $this->usesBang() ? '!' : '');
-        foreach($this->getLines() as $line)
+        foreach($lines as $line)
         {
             $output = sprintf("%s%s * %s\n", $output, $spaces, $line);
         }
