@@ -45,34 +45,33 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      */
     public function addLine($line = '')
     {
-        switch(gettype($line))
+        if (null === $line)
         {
-            case 'string':
-                foreach($this->parseStringInput($line) as $line)
-                {
-                    $this->_lines[] = $line;
-                }
-                break;
+            $this->_lines[] = '';
+        }
+        else
+        {
+            switch(gettype($line))
+            {
+                case 'string':
+                    if ($this->testStringForNewlines($line))
+                        $this->addlines($this->parseStringInput($line));
+                    else
+                        $this->_lines[] = $line;
+                    break;
 
-            case 'integer':
-            case 'float':
-                $this->_lines[] = (string)$line;
-                break;
+                case 'integer':
+                case 'double':
+                    $this->_lines[] = (string)$line;
+                    break;
 
-            case 'null':
-                $this->_lines[] = '';
-                break;
+                case 'boolean':
+                    $this->_lines[] = $line ? 'TRUE' : 'FALSE';
+                    break;
 
-            case 'boolean':
-                $this->_lines[] = $line ? 'TRUE' : 'FALSE';
-                break;
-
-            default:
-                throw new \InvalidArgumentException(sprintf(
-                    '%s::addLine - Comment lines must be scalar types, %s seen.',
-                    get_class($this),
-                    gettype($line)
-                ));
+                default:
+                    throw $this->createInvalidCommentLineArgumentException($line);
+            }
         }
     }
 
@@ -124,19 +123,6 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     }
 
     /**
-     * @param array $args
-     * @return string
-     */
-    public function compile(array $args = array())
-    {
-        throw new \BadMethodCallException(sprintf(
-            '%s::compile - This method must be overridden in extended class %s.',
-            get_class($this),
-            get_called_class()
-        ));
-    }
-
-    /**
      * Count elements of an object
      * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
@@ -167,6 +153,15 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
             'integer >= 0',
             (isset($args['leadingSpaces']) ? $args['leadingSpaces'] : 'UNDEFINED')
         );
+    }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    protected function testStringForNewlines($line)
+    {
+        return (bool)preg_match(self::NEWLINE_TEST, $line);
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,17 +16,19 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate;
+
 /**
  * Class HashCommentTemplateTest
  */
-class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
+class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate
+     * @return HashCommentTemplate
      */
     public function testCanConstructComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\HashCommentTemplate', $comment);
         return $comment;
     }
@@ -36,7 +38,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetEmptyComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $this->assertEmpty($comment->compile());
     }
 
@@ -45,7 +47,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanAddLineToComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $comment->addLine('woop woop');
         $this->assertEquals("    # woop woop\n", $comment->compile());
     }
@@ -56,7 +58,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanAddMultipleLines()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $comment->addLines(array('quiet line', 'LOUD LINE'));
         $this->assertEquals("    # quiet line\n    # LOUD LINE\n", $comment->compile());
     }
@@ -67,7 +69,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanAddEmptyLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $comment->addEmptyLine();
         $this->assertEquals("    # \n", $comment->compile());
     }
@@ -77,7 +79,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetLinesArray()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $lines = array(
             'neato line',
             'super neato line'
@@ -91,7 +93,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCountReturnsZeroWhenEmpty()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $this->assertEquals(0, count($comment));
     }
 
@@ -100,7 +102,7 @@ class HashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetCorrectCount()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate();
+        $comment = new HashCommentTemplate();
         $comment->addLines(array(
             1,2,3,4,5
         ));

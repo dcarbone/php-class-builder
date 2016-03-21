@@ -1,4 +1,4 @@
-<?php
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,17 +16,19 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
+
 /**
  * Class DoubleStarCommentTemplateTest
  */
-class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
+class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate
+     * @return DoubleStarCommentTemplate
      */
     public function testCanConstructCommentWithoutText()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
         return $comment;
     }
@@ -35,9 +37,9 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
      * @depends testCanConstructCommentWithoutText
-     * @param \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment
+     * @param DoubleStarCommentTemplate $comment
      */
-    public function testCanGetEmptyComment(\DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment)
+    public function testCanGetEmptyComment(DoubleStarCommentTemplate $comment)
     {
         $output = $comment->compile();
         $this->assertEquals("    /**\n     */\n", $output);
@@ -45,12 +47,10 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::addLine
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseStringInput
      */
     public function testCanAddLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $comment->addLine('hey, i\'m a comment!');
         $output = $comment->compile();
         $this->assertEquals("    /**\n     * hey, i'm a comment!\n     */\n", $output);
@@ -58,13 +58,11 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::addLine
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseStringInput
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate
+     * @return DoubleStarCommentTemplate
      */
     public function testCanAddMultilineComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $comment->addLine("this crazy comment\nextends across 2 lines!");
         $output = $comment->compile();
         $this->assertEquals("    /**\n     * this crazy comment\n     * extends across 2 lines!\n     */\n", $output);
@@ -76,7 +74,7 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanConstructCommentWithText()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate("really cool\ncomment");
+        $comment = new DoubleStarCommentTemplate("really cool\ncomment");
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
         $this->assertEquals("    /**\n     * really cool\n     * comment\n     */\n", $comment->compile());
     }
@@ -87,9 +85,9 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseStringInput
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
      * @depends testCanAddMultilineComment
-     * @param \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment
+     * @param DoubleStarCommentTemplate $comment
      */
-    public function testCanSetCustomLeadingSpaces(\DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate $comment)
+    public function testCanSetCustomLeadingSpaces(DoubleStarCommentTemplate $comment)
     {
         $output = $comment->compile(array('leadingSpaces' => 3));
         $this->assertEquals("   /**\n    * this crazy comment\n    * extends across 2 lines!\n    */\n", $output);
@@ -101,7 +99,7 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionThrownWhenPassingInvalidLeadingSpacesValue()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $comment->compile(array('leadingSpaces' => 'sandwiches'));
     }
 
@@ -110,7 +108,7 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testDoesNotUseBangByDefault()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $this->assertFalse($comment->usesBang());
     }
 
@@ -121,11 +119,24 @@ class DoubleStarCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanUseBang()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate();
         $this->assertFalse($comment->usesBang());
         $comment->setUseBang(true);
         $this->assertTrue($comment->usesBang());
         $output = $comment->compile();
         $this->assertEquals("    /**!\n     */\n", $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::onSingleLine
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::setSingleLineOutput
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
+     */
+    public function testCanGetSingleLineOutput()
+    {
+        $comment = new DoubleStarCommentTemplate('@var mixed $woot');
+        $comment->setSingleLineOutput(true);
+        $this->assertTrue($comment->onSingleLine());
+        $this->assertEquals("    /** @var mixed \$woot */\n", $comment->compile());
     }
 }

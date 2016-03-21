@@ -1,4 +1,4 @@
-<?php
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,17 +16,19 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate;
+
 /**
  * Class SingleStarCommentTest
  */
-class SingleStarCommentTest extends PHPUnit_Framework_TestCase
+class SingleStarCommentTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate
+     * @return SingleStarCommentTemplate
      */
     public function testCanConstructComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SingleStarCommentTemplate', $comment);
         return $comment;
     }
@@ -35,9 +37,9 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseCompileArgs
      * @depends testCanConstructComment
-     * @param \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate $comment
+     * @param SingleStarCommentTemplate $comment
      */
-    public function testCanGetEmptyComment(\DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate $comment)
+    public function testCanGetEmptyComment(SingleStarCommentTemplate $comment)
     {
         $output = $comment->compile();
         $this->assertEquals("    /*\n     */\n", $output);
@@ -50,7 +52,7 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      */
     public function testCanAddLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate();
         $comment->addLine('hey, i\'m a comment!');
         $output = $comment->compile();
         $this->assertEquals("    /*\n     * hey, i'm a comment!\n     */\n", $output);
@@ -60,11 +62,11 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::addLine
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseStringInput
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate
+     * @return SingleStarCommentTemplate
      */
     public function testCanAddMultilineComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate();
         $comment->addLine("this crazy comment\nextends across 2 lines!");
         $output = $comment->compile();
         $this->assertEquals("    /*\n     * this crazy comment\n     * extends across 2 lines!\n     */\n", $output);
@@ -76,9 +78,9 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::addLine
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseStringInput
      * @depends testCanAddMultilineComment
-     * @param \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate $comment
+     * @param SingleStarCommentTemplate $comment
      */
-    public function testCanSetCustomLeadingSpaces(\DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate $comment)
+    public function testCanSetCustomLeadingSpaces(SingleStarCommentTemplate $comment)
     {
         $output = $comment->compile(array('leadingSpaces' => 3));
         $this->assertEquals("   /*\n    * this crazy comment\n    * extends across 2 lines!\n    */\n", $output);
@@ -89,7 +91,7 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      */
     public function testDoesNotUseBangByDefault()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate();
         $this->assertFalse($comment->usesBang());
     }
 
@@ -100,11 +102,24 @@ class SingleStarCommentTest extends PHPUnit_Framework_TestCase
      */
     public function testCanUseBang()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate();
         $this->assertFalse($comment->usesBang());
         $comment->setUseBang(true);
         $this->assertTrue($comment->usesBang());
         $output = $comment->compile();
         $this->assertEquals("    /*!\n     */\n", $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::onSingleLine
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::setSingleLineOutput
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
+     */
+    public function testCanGetSingleLineOutput()
+    {
+        $comment = new SingleStarCommentTemplate('@var mixed $woot');
+        $comment->setSingleLineOutput(true);
+        $this->assertTrue($comment->onSingleLine());
+        $this->assertEquals("    /* @var mixed \$woot */\n", $comment->compile());
     }
 }

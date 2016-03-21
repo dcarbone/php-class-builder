@@ -18,6 +18,7 @@
 
 use DCarbone\PHPClassBuilder\Exception\FilePartNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidMethodNameException;
@@ -158,6 +159,19 @@ abstract class AbstractTemplate
             '%s - Specified output path "%s" does not appear to be a valid filepath.',
             get_class($path),
             $this->_determineExceptionValueOutput($path)
+        ));
+    }
+
+    /**
+     * @param mixed $line
+     * @return InvalidCommentLineArgumentException
+     */
+    protected function createInvalidCommentLineArgumentException($line)
+    {
+        return new InvalidCommentLineArgumentException(sprintf(
+            '%s - Comment lines must be scalar types, %s seen.',
+            get_class($this),
+            $this->_determineExceptionValueOutput($line)
         ));
     }
 

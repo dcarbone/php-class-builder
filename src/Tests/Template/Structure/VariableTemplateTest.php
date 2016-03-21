@@ -1,4 +1,4 @@
-<?php
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template\Structure;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,18 +16,21 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
+use DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate;
+
 /**
  * Class VariableTemplateTest
  */
-class VariableTemplateTest extends PHPUnit_Framework_TestCase
+class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::__construct
-     * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate
+     * @return VariableTemplate
      */
     public function testCanConstructWithoutArguments()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\VariableTemplate', $variable);
         return $variable;
     }
@@ -37,11 +40,11 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::setName
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getName
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidVariableName
-     * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate
+     * @return VariableTemplate
      */
     public function testCanConstructWithName()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $variable = new VariableTemplate('testvar');
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\VariableTemplate', $variable);
         $this->assertEquals('testvar', $variable->getName());
         return $variable;
@@ -57,7 +60,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testExceptionThrownWhenConstructingWithInvalidStringName()
     {
-        new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate(' 9111lololol');
+        new VariableTemplate(' 9111lololol');
     }
 
     /**
@@ -65,9 +68,9 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getName
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidVariableName
      * @depends testCanConstructWithoutArguments
-     * @param \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate $variable
+     * @param VariableTemplate $variable
      */
-    public function testCanSetNamePostConstruct(\DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate $variable)
+    public function testCanSetNamePostConstruct(VariableTemplate $variable)
     {
         $variable->setName('vartest');
         $this->assertEquals('vartest', $variable->getName());
@@ -79,10 +82,10 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanConstructWithScope()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate(
+        $variable = new VariableTemplate(
             null,
-            new \DCarbone\PHPClassBuilder\Enum\ScopeEnum(
-                \DCarbone\PHPClassBuilder\Enum\ScopeEnum::_PUBLIC
+            new ScopeEnum(
+                ScopeEnum::_PUBLIC
             )
         );
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\VariableTemplate', $variable);
@@ -94,15 +97,11 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::setScope
      * @depends testCanConstructWithoutArguments
-     * @param \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate $variable
+     * @param VariableTemplate $variable
      */
-    public function testCanSetScopePostConstruct(\DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate $variable)
+    public function testCanSetScopePostConstruct(VariableTemplate $variable)
     {
-        $variable->setScope(
-            new \DCarbone\PHPClassBuilder\Enum\ScopeEnum(
-                \DCarbone\PHPClassBuilder\Enum\ScopeEnum::_PRIVATE
-            )
-        );
+        $variable->setScope(new ScopeEnum(ScopeEnum::_PRIVATE));
         $scope = $variable->getScope();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Enum\\ScopeEnum', $scope);
         $this->assertEquals('private', (string)$scope);
@@ -114,7 +113,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testRequiresGetterByDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertTrue($variable->requiresGetter());
     }
 
@@ -124,7 +123,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testRequiresSetterByDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertTrue($variable->requiresSetter());
     }
 
@@ -134,7 +133,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanOverrideRequiresGetterWithConstructor()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate(null, null, false);
+        $variable = new VariableTemplate(null, null, false);
         $this->assertFalse($variable->requiresGetter());
     }
 
@@ -144,7 +143,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanOverrideRequiresSetterWithConstructor()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate(null, null, true, false);
+        $variable = new VariableTemplate(null, null, true, false);
         $this->assertFalse($variable->requiresSetter());
     }
 
@@ -154,7 +153,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanOverrideRequiresGetterWithSetter()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertTrue($variable->requiresGetter());
         $variable->setRequiresGetter(false);
         $this->assertFalse($variable->requiresGetter());
@@ -166,7 +165,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanOverrideRequiresSetterWithSetter()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertTrue($variable->requiresSetter());
         $variable->setRequiresSetter(false);
         $this->assertFalse($variable->requiresSetter());
@@ -177,7 +176,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testNotStaticByDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertFalse($variable->isStatic());
     }
 
@@ -187,7 +186,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanSetStatic()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $variable->setStatic(true);
         $this->assertTrue($variable->isStatic());
     }
@@ -197,7 +196,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testNotCollectionByDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertFalse($variable->isCollection());
     }
 
@@ -207,7 +206,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanSetCollection()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $variable->setCollection(true);
         $this->assertTrue($variable->isCollection());
     }
@@ -217,7 +216,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testPHPTypeMixedByDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertEquals('mixed', $variable->getPHPType());
     }
 
@@ -227,7 +226,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanSetPHPType()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertEquals('mixed', $variable->getPHPType());
         $variable->setPHPType('string');
         $this->assertEquals('string', $variable->getPHPType());
@@ -238,7 +237,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testHasNoDefaultValueByStatementDefault()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertNull($variable->getDefaultValueStatement());
     }
 
@@ -248,7 +247,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanSetDefaultValueStatement()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate();
+        $variable = new VariableTemplate();
         $this->assertNull($variable->getDefaultValueStatement());
         $variable->setDefaultValueStatement('array()');
         $this->assertEquals('array()', $variable->getDefaultValueStatement());
@@ -259,7 +258,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetClassPropertyComment()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $variable = new VariableTemplate('testvar');
         $comment = $variable->getClassPropertyComment();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
         $this->assertEquals("    /**\n     * @var mixed\n     */\n", $comment->compile());
@@ -270,7 +269,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetMethodParameterComment()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $variable = new VariableTemplate('testvar');
         $comment = $variable->getMethodParameterComment();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
         $this->assertEquals("    /**\n     * @param mixed \$testvar\n     */\n", $comment->compile());
@@ -281,7 +280,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetClassPropertyAnnotation()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $variable = new VariableTemplate('testvar');
         $annotation = $variable->getClassPropertyComment(true);
         $this->assertInternalType('string', $annotation);
         $this->assertEquals('@var mixed', $annotation);
@@ -292,7 +291,7 @@ class VariableTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetMethodParameterAnnotation()
     {
-        $variable = new \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate('testvar');
+        $variable = new VariableTemplate('testvar');
         $annotation = $variable->getMethodParameterComment(true);
         $this->assertInternalType('string', $annotation);
         $this->assertEquals('@param mixed $testvar', $annotation);

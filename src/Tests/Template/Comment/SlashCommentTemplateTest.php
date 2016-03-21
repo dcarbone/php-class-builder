@@ -1,4 +1,4 @@
-<?php
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template\Comment;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,17 +16,19 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate;
+
 /**
  * Class SlashCommentTemplateTest
  */
-class SlashCommentTemplateTest extends PHPUnit_Framework_TestCase
+class SlashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate
+     * @return SlashCommentTemplate
      */
     public function testCanConstructComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
+        $comment = new SlashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SlashCommentTemplate', $comment);
         return $comment;
     }
@@ -36,7 +38,7 @@ class SlashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanGetEmptyComment()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
+        $comment = new SlashCommentTemplate();
         $this->assertEquals('', $comment->compile());
     }
 
@@ -46,7 +48,7 @@ class SlashCommentTemplateTest extends PHPUnit_Framework_TestCase
      */
     public function testCanAddLine()
     {
-        $comment = new \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate();
+        $comment = new SlashCommentTemplate();
         $comment->addLine('super great comment');
         $this->assertEquals("    // super great comment\n", $comment->compile());
     }
