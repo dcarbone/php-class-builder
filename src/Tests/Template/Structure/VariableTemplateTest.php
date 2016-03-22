@@ -296,4 +296,128 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $annotation);
         $this->assertEquals('@param mixed $testvar', $annotation);
     }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     */
+    public function testCanCompileAsClassProperty()
+    {
+        $variable = new VariableTemplate('testvar');
+
+        $this->assertEquals(
+            "        /**\n         * @var mixed\n         */\n        public \$testvar;\n",
+            $variable->compile(array('type' => 'classProperty'))
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     */
+    public function testCanCompileAsStaticClassProperty()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->setStatic();
+        $this->assertEquals(
+            "        /**\n         * @var mixed\n         */\n        public static \$testvar;\n",
+            $variable->compile(array('type' => 'classProperty'))
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     */
+    public function testCanCompileAsClassPropertyWithDefaultValue()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->setDefaultValueStatement('array()');
+        $variable->setPHPType('array');
+
+        $this->assertEquals(
+            "        /**\n         * @var array\n         */\n        public \$testvar = array();\n",
+            $variable->compile(array('type' => 'classProperty'))
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     */
+    public function testCanCompileAsClassPropertyWithoutComment()
+    {
+        $variable = new VariableTemplate('testvar');
+
+        $this->assertEquals(
+            "        public \$testvar;\n",
+            $variable->compile(array('type' => 'classProperty', 'includeComment' => false))
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     */
+    public function testCanCompileAsClassVarWithCustomLeadingSpaces()
+    {
+        $variable = new VariableTemplate('testvar');
+
+        $this->assertEquals(
+            "/**\n * @var mixed\n */\npublic \$testvar;\n",
+            $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 0))
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     */
+    public function testExceptionThrownWhenNotSpecifyingCompileType()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile();
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     */
+    public function testExceptionThrownWhenInvalidIncludeCommentArgPassed()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile(array('type' => 'classProperty', 'includeComment' => 'sandwiches'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     */
+    public function testExceptionThrownWhenInvalidLeadingSpacesArgPassed()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 'sandwich'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsMethodParameter
+     */
+    public function testCanCompileAsMethodParameter()
+    {
+        $variable = new VariableTemplate('testvar');
+        $this->assertEquals('$testvar', $variable->compile(array('type' => 'methodParameter')));
+    }
 }

@@ -245,17 +245,18 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     public function compile(array $args = array())
     {
-        list($compileType) = $this->parseCompileArgs($args);
+        list(
+            $type,
+            $includeComment,
+            $leadingSpaces,
+            $includeDefaultValue)= $this->parseCompileArgs($args);
 
-        switch($compileType)
+        switch($type)
         {
             case 'classProperty':
-                return $this->_compileAsClassProperty();
+                return $this->_compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue);
             case 'methodParameter':
-                return $this->_compileAsMethodParameter();
-
-            default:
-                return '';
+                return $this->_compileAsMethodParameter($includeDefaultValue);
         }
     }
 
@@ -265,51 +266,140 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     protected function parseCompileArgs(array $args)
     {
-        static $compileTypes = array(
+        static $defaults = array(
+            'includeComment' => true,
+            'leadingSpaces' => 8,
+            'includeDefaultValue' => true
+        );
+        static $types = array(
             'classProperty',
             'methodParameter',
         );
 
-        if (isset($args['compileType']) && in_array($args['compileType'], $compileTypes, true))
-            return array($args['compileType']);
+        $compiled = array();
 
-        throw $this->createInvalidCompileArgumentValueException(
-            'compileType',
-            sprintf('[\'%s\']', implode('\', \'', $compileTypes)),
-            isset($args['compileType']) ? $args['compileType'] : 'UNDEFINED'
-        );
+        if (isset($args['type']) && in_array($args['type'], $types, true))
+        {
+            $compiled[] = $args['type'];
+        }
+        else
+        {
+            throw $this->createInvalidCompileArgumentValueException(
+                'type',
+                sprintf('[\'%s\']', implode('\', \'', $types)),
+                isset($args['type']) ? $args['type'] : 'UNDEFINED'
+            );
+        }
+
+        if (isset($args['includeComment']))
+        {
+            if (is_bool($args['includeComment']))
+            {
+                $compiled[] = $args['includeComment'];
+            }
+            else
+            {
+                throw $this->createInvalidCompileArgumentValueException(
+                    'includeComment',
+                    'Boolean value (defaults to TRUE)',
+                    $args['includeComment']
+                );
+            }
+        }
+        else
+        {
+            $compiled[] = $defaults['includeComment'];
+        }
+
+        if (isset($args['leadingSpaces']))
+        {
+            if (is_int($args['leadingSpaces']) && $args['leadingSpaces'] >= 0)
+            {
+                $compiled[] = $args['leadingSpaces'];
+            }
+            else
+            {
+                throw $this->createInvalidCompileArgumentValueException(
+                    'leadingSpaces',
+                    'Integer >= 0',
+                    $args['leadingSpaces']
+                );
+            }
+        }
+        else
+        {
+            $compiled[] = $defaults['leadingSpaces'];
+        }
+
+        if (isset($args['includeDefaultValue']))
+        {
+            if (is_bool($args['includeDefaultValue']))
+            {
+                $compiled[] = $args['includeDefaultValue'];
+            }
+            else
+            {
+                throw $this->createInvalidCompileArgumentValueException(
+                    'includeDefaultValue',
+                    'Boolean value (defaults to TRUE)',
+                    $args['includeDefaultValue']
+                );
+            }
+        }
+        else
+        {
+            $compiled[] = true;
+        }
+
+        return $compiled;
     }
 
     /**
+     * @param bool $includeComment
+     * @param int $leadingSpaces
+     * @param bool $includeDefaultValue
      * @return string
      */
-    private function _compileAsClassProperty()
+    private function _compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue)
     {
-        $output = sprintf(
-            '%s        %s',
-            $this->getClassPropertyComment()->compile(array('leadingSpaces' => 8)),
-            (string)$this->getScope()
-        );
+        $spaces = str_repeat(' ', $leadingSpaces);
+
+        if ($includeComment)
+        {
+            $output = sprintf(
+                '%s%s%s',
+                $this->getClassPropertyComment()->compile(array('leadingSpaces' => $leadingSpaces)),
+                $spaces,
+                (string)$this->getScope()
+            );
+        }
+        else
+        {
+            $output = sprintf('%s%s', $spaces, (string)$this->getScope());
+        }
 
         if ($this->isStatic())
             $output = sprintf('%s static', $output);
 
         $output = sprintf('%s $%s', $output, $this->getName());
 
-        if (null !== ($default = $this->getDefaultValueStatement()))
-            $output = sprintf('%s = %s;', $output, $default);
+        if ($includeDefaultValue && null !== ($default = $this->getDefaultValueStatement()))
+            $output = sprintf("%s = %s;\n", $output, $default);
+        else
+            $output = sprintf("%s;\n", $output);
 
         return $output;
     }
 
     /**
+     * @param bool $includeDefaultValue
      * @return string
      */
-    private function _compileAsMethodParameter()
+    private function _compileAsMethodParameter($includeDefaultValue)
     {
         $output = sprintf('$%s', $this->getName());
 
-        if (null !== ($default = $this->getDefaultValueStatement()))
+        if ($includeDefaultValue && null !== ($default = $this->getDefaultValueStatement()))
             $output = sprintf('%s = %s', $output, $default);
 
         return $output;
