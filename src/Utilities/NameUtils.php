@@ -56,7 +56,7 @@ abstract class NameUtils
      * @param string $name
      * @return bool
      */
-    public static function isValidNSName($name)
+    public static function isValidNamespaceName($name)
     {
         return is_string($name) && 1 === preg_match(self::NAMESPACE_NAME_REGEX, $name);
     }

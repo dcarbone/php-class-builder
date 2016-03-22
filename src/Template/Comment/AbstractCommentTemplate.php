@@ -22,7 +22,7 @@ use DCarbone\PHPClassBuilder\Template\AbstractTemplate;
  * Class AbstractCommentTemplate
  * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-abstract class AbstractCommentTemplate extends AbstractTemplate implements \Countable
+abstract class AbstractCommentTemplate extends AbstractTemplate implements \Countable, \Iterator
 {
     const NEWLINE_TEST = '{(\r\n)|\n|\r}S';
 
@@ -115,6 +115,49 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     }
 
     /**
+     * @param string $line
+     * @param bool|true $strict
+     * @return integer Returns index of line or -1 if not found
+     */
+    public function hasLine($line, $strict = true)
+    {
+        return in_array($line, $this->_lines, (bool)$strict);
+    }
+
+    /**
+     * @param string $line
+     * @param bool|true $strict
+     * @return integer Index of line or -1 if not found
+     */
+    public function getLineIndex($line, $strict = true)
+    {
+        return array_search($line, $this->_lines, (bool)$strict);
+    }
+
+    /**
+     * @param int $idx
+     */
+    public function removeLineByIndex($idx)
+    {
+        if (isset($this->_lines[$idx]))
+        {
+            unset($this->_lines[$idx]);
+            $this->_lines = array_values($this->_lines);
+        }
+    }
+
+    /**
+     * @param string $value
+     * @param bool|true $strict
+     */
+    public function removeLineByValue($value, $strict = true)
+    {
+        $idx = $this->getLineIndex($value, (bool)$strict);
+        if ($idx >= 0)
+            $this->removeLineByIndex($idx);
+    }
+
+    /**
      * Clear out comment body
      */
     public function clear()
@@ -126,11 +169,60 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      * Count elements of an object
      * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
-     * @since 5.1.0
      */
     public function count()
     {
         return count($this->_lines);
+    }
+
+    /**
+     * Return the current element
+     * @link http://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     */
+    public function current()
+    {
+        return current($this->_lines);
+    }
+
+    /**
+     * Move forward to next element
+     * @link http://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     */
+    public function next()
+    {
+        next($this->_lines);
+    }
+
+    /**
+     * Return the key of the current element
+     * @link http://php.net/manual/en/iterator.key.php
+     * @return mixed scalar on success, or null on failure.
+     */
+    public function key()
+    {
+        return key($this->_lines);
+    }
+
+    /**
+     * Checks if current position is valid
+     * @link http://php.net/manual/en/iterator.valid.php
+     * @return boolean The return value will be casted to boolean and then evaluated.
+     */
+    public function valid()
+    {
+        return key($this->_lines) !== null;
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     * @link http://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     */
+    public function rewind()
+    {
+        reset($this->_lines);
     }
 
     /**

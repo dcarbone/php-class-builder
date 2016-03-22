@@ -21,6 +21,9 @@
         <testsuite name="structure">
             <directory>src/Tests/Template/Structure</directory>
         </testsuite>
+        <testsuite name="file">
+            <file>src/Tests/Template/FileTemplateTest.php</file>
+        </testsuite>
     </testsuites>
 
     <filter>

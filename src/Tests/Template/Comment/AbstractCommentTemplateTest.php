@@ -231,4 +231,91 @@ class AbstractCommentTemplateTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(array(new \stdClass()))
             ->getMockForAbstractClass();
     }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::current
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::next
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::valid
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::key
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::rewind
+     */
+    public function testImplementsIterator()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->setConstructorArgs(array("multiline\nmultipass"))
+            ->getMockForAbstractClass();
+
+        $this->assertTrue($stub->valid());
+        $this->assertEquals(0, $stub->key());
+        $this->assertEquals('multiline', $stub->current());
+        $stub->next();
+        $this->assertTrue($stub->valid());
+        $this->assertEquals('multipass', $stub->current());
+        $this->assertEquals(1, $stub->key());
+        $stub->next();
+        $this->assertFalse($stub->valid());
+        $stub->rewind();
+        $this->assertTrue($stub->valid());
+        $this->assertEquals(0, $stub->key());
+        $this->assertEquals('multiline', $stub->current());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::hasLine
+     */
+    public function testCanTestForLineInComment()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->setConstructorArgs(array("multiline\nmultipass"))
+            ->getMockForAbstractClass();
+
+        $this->assertTrue($stub->hasLine('multiline'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::getLineIndex
+     */
+    public function testCanGetIndexOfLine()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->setConstructorArgs(array("multiline\nmultipass"))
+            ->getMockForAbstractClass();
+
+        $this->assertEquals(1, $stub->getLineIndex('multipass'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::removeLineByIndex
+     */
+    public function testCanRemoveLineByIndex()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->setConstructorArgs(array("multiline\nmultipass"))
+            ->getMockForAbstractClass();
+
+        $this->assertCount(2, $stub);
+        $stub->removeLineByIndex(0);
+        $this->assertCount(1, $stub);
+        $this->assertEquals(0, $stub->getLineIndex('multipass'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::removeLineByValue
+     */
+    public function testCanRemoveLineByValue()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->setConstructorArgs(array("multiline\nmultipass"))
+            ->getMockForAbstractClass();
+
+        $this->assertCount(2, $stub);
+        $stub->removeLineByValue('multipass');
+        $this->assertCount(1, $stub);
+        $this->assertEquals(0, $stub->getLineIndex('multiline'));
+    }
 }

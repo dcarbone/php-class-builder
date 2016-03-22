@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Exception\CommentLineIndexNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\FilePartNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException;
@@ -172,6 +173,19 @@ abstract class AbstractTemplate
             '%s - Comment lines must be scalar types, %s seen.',
             get_class($this),
             $this->_determineExceptionValueOutput($line)
+        ));
+    }
+
+    /**
+     * @param mixed $offset
+     * @return CommentLineIndexNotFoundException
+     */
+    protected function createCommentLineIndexNotFoundException($offset)
+    {
+        return new CommentLineIndexNotFoundException(sprintf(
+            '%s - Comment has no line at index "%s"',
+            get_class($this),
+            $this->_determineExceptionValueOutput($offset)
         ));
     }
 

@@ -254,53 +254,28 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getClassPropertyComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getClassPropertyAnnotation
      */
-    public function testCanGetClassPropertyComment()
+    public function testCanGetVariableClassPropertyAnnotation()
     {
         $variable = new VariableTemplate('testvar');
-        $comment = $variable->getClassPropertyComment();
-        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
-        $this->assertEquals("    /**\n     * @var mixed\n     */\n", $comment->compile());
+        $this->assertEquals('@var mixed', $variable->getClassPropertyAnnotation());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterAnnotation
      */
-    public function testCanGetMethodParameterComment()
+    public function testCanGetVariableMethodParameterAnnotation()
     {
         $variable = new VariableTemplate('testvar');
-        $comment = $variable->getMethodParameterComment();
-        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
-        $this->assertEquals("    /**\n     * @param mixed \$testvar\n     */\n", $comment->compile());
-    }
-
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getClassPropertyComment
-     */
-    public function testCanGetClassPropertyAnnotation()
-    {
-        $variable = new VariableTemplate('testvar');
-        $annotation = $variable->getClassPropertyComment(true);
-        $this->assertInternalType('string', $annotation);
-        $this->assertEquals('@var mixed', $annotation);
-    }
-
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterComment
-     */
-    public function testCanGetMethodParameterAnnotation()
-    {
-        $variable = new VariableTemplate('testvar');
-        $annotation = $variable->getMethodParameterComment(true);
-        $this->assertInternalType('string', $annotation);
-        $this->assertEquals('@param mixed $testvar', $annotation);
+        $this->assertEquals('@param mixed $testvar', $variable->getMethodParameterAnnotation());
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileDocBlockComment
      */
     public function testCanCompileAsClassProperty()
     {
@@ -419,5 +394,27 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $this->assertEquals('$testvar', $variable->compile(array('type' => 'methodParameter')));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     */
+    public function testExceptionThrownWhenCompileArgsNotEmptyButTypeNotDefined()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile(array('leadingSpaces' => 5));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     */
+    public function testExceptionThrownWhenPassingInvalidIncludeDefaultValueArg()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile(array('type' => 'classProperty', 'includeDefaultValue' => 'sandwiches'));
     }
 }

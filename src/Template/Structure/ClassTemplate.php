@@ -38,7 +38,7 @@ class ClassTemplate extends AbstractStructureTemplate
     /** @var VariableTemplate[] */
     private $_properties = array();
     /** @var null|string */
-    private $_namespace;
+    private $_namespace = null;
 
     /** @var FileTemplate */
     private $_file = null;
@@ -48,16 +48,19 @@ class ClassTemplate extends AbstractStructureTemplate
      *
      * @param string|null $name
      * @param string|null $namespace
-     * @param null|string|ClassTemplate $parent
      * @param bool|false $abstract
      */
-    public function __construct($name = null, $namespace = null, $parent = null, $abstract = false)
+    public function __construct($name = null,
+                                $namespace = null,
+                                $abstract = false)
     {
         if (null !== $name)
             $this->setName($name);
 
         if (null !== $namespace)
             $this->setNamespace($namespace);
+
+        $this->_abstract = (bool)$abstract;
     }
 
     /**
@@ -92,7 +95,7 @@ class ClassTemplate extends AbstractStructureTemplate
      */
     public function setNamespace($namespace)
     {
-        if (NameUtils::isValidNSName($namespace))
+        if (NameUtils::isValidNamespaceName($namespace))
             $this->_namespace = $namespace;
         else
             throw $this->createInvalidNamespaceNameException($namespace);

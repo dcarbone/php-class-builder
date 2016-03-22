@@ -133,7 +133,7 @@ class InterfaceTemplate extends AbstractStructureTemplate
      */
     public function setNamespace($namespace)
     {
-        if (NameUtils::isValidNSName($namespace))
+        if (NameUtils::isValidNamespaceName($namespace))
             $this->_namespace = $namespace;
         else
             throw $this->createInvalidNamespaceNameException($namespace);

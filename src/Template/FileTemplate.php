@@ -123,19 +123,21 @@ class FileTemplate extends AbstractTemplate
     {
         $file = '<?php';
 
-        $class = $this->getClass();
-
-        if ($ns = $class->getNamespace())
-            $file = sprintf("%s namespace %s;\n\n", $file, $ns);
-        else
-            $file = sprintf("%s\n\n", $file);
+        if ($class = $this->getClass())
+        {
+            if ($ns = $class->getNamespace())
+                $file = sprintf("%s namespace %s;\n\n", $file, $ns);
+            else
+                $file = sprintf("%s\n\n", $file);
+        }
 
         foreach($this->_beforeClassComments as $comment)
         {
             $file = sprintf("%s%s\n", $file, $comment->compile(array('leadingSpaces' => 0)));
         }
 
-        $file = sprintf("%s\n%s\n", $file, $class->compile(array('inFile' => true)));
+        if ($class)
+            $file = sprintf("%s\n%s\n", $file, $class->compile(array('inFile' => true)));
 
         foreach($this->_afterClassComments as $comment)
         {

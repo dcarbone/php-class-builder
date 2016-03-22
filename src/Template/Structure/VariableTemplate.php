@@ -203,40 +203,28 @@ class VariableTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param bool|false $annotationOnly
-     * @return DoubleStarCommentTemplate|string
+     * @return string
      */
-    public function getClassPropertyComment($annotationOnly = false)
+    public function getClassPropertyAnnotation()
     {
-        $annotation = sprintf(
+        return sprintf(
             '@var %s%s',
             $this->getPHPType(),
             $this->isCollection() ? '[]' : ''
         );
-
-        if ($annotationOnly)
-            return $annotation;
-
-        return new DoubleStarCommentTemplate($annotation);
     }
 
     /**
-     * @param bool|false $annotationOnly
-     * @return DoubleStarCommentTemplate|string
+     * @return string
      */
-    public function getMethodParameterComment($annotationOnly = false)
+    public function getMethodParameterAnnotation()
     {
-        $annotation = sprintf(
+        return sprintf(
             '@param %s $%s%s',
             $this->getPHPType(),
             $this->getName(),
             $this->isCollection() ? '[]' : ''
         );
-
-        if ($annotationOnly)
-            return $annotation;
-
-        return new DoubleStarCommentTemplate($annotation);
     }
 
     /**
@@ -245,6 +233,11 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     public function compile(array $args = array())
     {
+        static $_types = array(
+            'classProperty',
+            'methodParameter'
+        );
+
         list(
             $type,
             $includeComment,
@@ -257,6 +250,13 @@ class VariableTemplate extends AbstractStructureTemplate
                 return $this->_compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue);
             case 'methodParameter':
                 return $this->_compileAsMethodParameter($includeDefaultValue);
+
+            default:
+                throw $this->createInvalidCompileArgumentValueException(
+                    'type',
+                    sprintf('[\'%s\']', implode('\', \'', $_types)),
+                    isset($args['type']) ? $args['type'] : 'UNDEFINED'
+                );
         }
     }
 
@@ -266,30 +266,22 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     protected function parseCompileArgs(array $args)
     {
-        static $defaults = array(
+        static $_defaults = array(
+            'type' => null,
             'includeComment' => true,
             'leadingSpaces' => 8,
             'includeDefaultValue' => true
         );
-        static $types = array(
-            'classProperty',
-            'methodParameter',
-        );
+
+        if (0 === count($args))
+            return array_values($_defaults);
 
         $compiled = array();
 
-        if (isset($args['type']) && in_array($args['type'], $types, true))
-        {
+        if (isset($args['type']) && is_string($args['type']))
             $compiled[] = $args['type'];
-        }
         else
-        {
-            throw $this->createInvalidCompileArgumentValueException(
-                'type',
-                sprintf('[\'%s\']', implode('\', \'', $types)),
-                isset($args['type']) ? $args['type'] : 'UNDEFINED'
-            );
-        }
+            $compiled[] = $_defaults['type'];
 
         if (isset($args['includeComment']))
         {
@@ -308,7 +300,7 @@ class VariableTemplate extends AbstractStructureTemplate
         }
         else
         {
-            $compiled[] = $defaults['includeComment'];
+            $compiled[] = $_defaults['includeComment'];
         }
 
         if (isset($args['leadingSpaces']))
@@ -328,7 +320,7 @@ class VariableTemplate extends AbstractStructureTemplate
         }
         else
         {
-            $compiled[] = $defaults['leadingSpaces'];
+            $compiled[] = $_defaults['leadingSpaces'];
         }
 
         if (isset($args['includeDefaultValue']))
@@ -368,7 +360,7 @@ class VariableTemplate extends AbstractStructureTemplate
         {
             $output = sprintf(
                 '%s%s%s',
-                $this->getClassPropertyComment()->compile(array('leadingSpaces' => $leadingSpaces)),
+                $this->_compileDocBlockComment()->compile(array('leadingSpaces' => $leadingSpaces)),
                 $spaces,
                 (string)$this->getScope()
             );
@@ -403,5 +395,27 @@ class VariableTemplate extends AbstractStructureTemplate
             $output = sprintf('%s = %s', $output, $default);
 
         return $output;
+    }
+
+    /**
+     * @return DoubleStarCommentTemplate
+     */
+    private function _compileDocBlockComment()
+    {
+        $comment = $this->getDocBlockComment();
+        $addAnnotation = true;
+        foreach($comment->getLines() as $line)
+        {
+            if (0 === strpos(trim($line), '@var'))
+            {
+                $addAnnotation = false;
+                break;
+            }
+        }
+
+        if ($addAnnotation)
+            $comment->addLine($this->getClassPropertyAnnotation());
+
+        return $comment;
     }
 }
