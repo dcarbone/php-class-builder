@@ -275,7 +275,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileDocBlockComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
      */
     public function testCanCompileAsClassProperty()
     {
@@ -408,6 +408,24 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     */
+    public function testCanIncludeDefaultValue()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->setDefaultValueStatement('"stringvalue"');
+        $this->assertEquals(
+            'public $testvar = "stringvalue";'."\n",
+            $variable->compile(array(
+                'type' => 'classProperty',
+                'includeDefaultValue' => true,
+                'includeComment' => false,
+                'leadingSpaces' => 0
+            ))
+        );
+    }
+
+    /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
@@ -416,5 +434,18 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $variable->compile(array('type' => 'classProperty', 'includeDefaultValue' => 'sandwiches'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
+     */
+    public function testCanManuallyDefineVarDocBlockLine()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->getDocBlockComment()->addLine('@var string');
+        $this->assertEquals(
+            "/**\n * @var string\n */\npublic \$testvar;\n",
+            $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 0))
+        );
     }
 }

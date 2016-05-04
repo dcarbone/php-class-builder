@@ -242,7 +242,7 @@ class VariableTemplate extends AbstractStructureTemplate
             $type,
             $includeComment,
             $leadingSpaces,
-            $includeDefaultValue)= $this->parseCompileArgs($args);
+            $includeDefaultValue) = $this->parseCompileArgs($args);
 
         switch($type)
         {
@@ -360,7 +360,7 @@ class VariableTemplate extends AbstractStructureTemplate
         {
             $output = sprintf(
                 '%s%s%s',
-                $this->_compileDocBlockComment()->compile(array('leadingSpaces' => $leadingSpaces)),
+                $this->_compileClassPropertyDocBlockComment()->compile(array('leadingSpaces' => $leadingSpaces)),
                 $spaces,
                 (string)$this->getScope()
             );
@@ -400,7 +400,7 @@ class VariableTemplate extends AbstractStructureTemplate
     /**
      * @return DoubleStarCommentTemplate
      */
-    private function _compileDocBlockComment()
+    private function _compileClassPropertyDocBlockComment()
     {
         $comment = $this->getDocBlockComment();
         $addAnnotation = true;
