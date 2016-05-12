@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
 use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
@@ -26,6 +27,13 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
  */
 class VariableTemplate extends AbstractStructureTemplate
 {
+    // Compile template as bare variable
+    const COMPILETYPE_VARIABLE = 1;
+    // Compile template as method parameter
+    const COMPILETYPE_METHOD = 2;
+    // Compile template as class property
+    const COMPILETYPE_PROPERTY = 3;
+
     /** @var string */
     private $_name;
     /** @var ScopeEnum */
@@ -233,11 +241,6 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     public function compile(array $args = array())
     {
-        static $_types = array(
-            'classProperty',
-            'methodParameter'
-        );
-
         list(
             $type,
             $includeComment,
@@ -246,18 +249,31 @@ class VariableTemplate extends AbstractStructureTemplate
 
         switch($type)
         {
-            case 'classProperty':
+            case self::COMPILETYPE_VARIABLE:
+                return $this->_compileAsVariable($includeComment, $leadingSpaces, $includeDefaultValue);
+            case self::COMPILETYPE_PROPERTY:
                 return $this->_compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue);
-            case 'methodParameter':
+            case self::COMPILETYPE_METHOD:
                 return $this->_compileAsMethodParameter($includeDefaultValue);
 
-            default:
-                throw $this->createInvalidCompileArgumentValueException(
-                    'type',
-                    sprintf('[\'%s\']', implode('\', \'', $_types)),
-                    isset($args['type']) ? $args['type'] : 'UNDEFINED'
-                );
+            // TODO: Should not be reachable, but do something?
+            default: return '';
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefaultCompileArgs()
+    {
+        static $_defaults = array(
+            CompileOpt::COMPILE_TYPE => self::COMPILETYPE_VARIABLE,
+            CompileOpt::INC_COMMENT => true,
+            CompileOpt::LEADING_SPACES => 8,
+            CompileOpt::INC_DEFAULT_VALUE => true
+        );
+
+        return $_defaults;
     }
 
     /**
@@ -266,73 +282,68 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     protected function parseCompileArgs(array $args)
     {
-        static $_defaults = array(
-            'type' => null,
-            'includeComment' => true,
-            'leadingSpaces' => 8,
-            'includeDefaultValue' => true
-        );
-
-        if (0 === count($args))
-            return array_values($_defaults);
+        $args = $args + $this->getDefaultCompileArgs();
 
         $compiled = array();
 
-        if (isset($args['type']) && is_string($args['type']))
-            $compiled[] = $args['type'];
-        else
-            $compiled[] = $_defaults['type'];
-
-        if (isset($args['includeComment']))
+        switch($args[CompileOpt::COMPILE_TYPE])
         {
-            if (is_bool($args['includeComment']))
+            case self::COMPILETYPE_VARIABLE:
+            case self::COMPILETYPE_METHOD:
+            case self::COMPILETYPE_PROPERTY:
+                $compiled[] = $args[CompileOpt::COMPILE_TYPE];
+                break;
+
+            default:
+                throw $this->createInvalidCompileArgumentValueException(
+                    'COMPILE_TYPE',
+                    'COMPILETYPE_VARIABLE, COMPILETYPE_METHOD, COMPILETYPE_PROPERTY',
+                    $args[CompileOpt::COMPILE_TYPE]
+                );
+        }
+
+        if (isset($args[CompileOpt::INC_COMMENT]))
+        {
+            if (is_bool($args[CompileOpt::INC_COMMENT]))
             {
-                $compiled[] = $args['includeComment'];
+                $compiled[] = $args[CompileOpt::INC_COMMENT];
             }
             else
             {
                 throw $this->createInvalidCompileArgumentValueException(
-                    'includeComment',
+                    'COMPILEOPT_COMMENT',
                     'Boolean value (defaults to TRUE)',
-                    $args['includeComment']
+                    $args[CompileOpt::INC_COMMENT]
                 );
             }
         }
-        else
-        {
-            $compiled[] = $_defaults['includeComment'];
-        }
 
-        if (isset($args['leadingSpaces']))
+        if (isset($args[self::COMPILEOPT_LEADING_SPACES]))
         {
-            if (is_int($args['leadingSpaces']) && $args['leadingSpaces'] >= 0)
+            if (is_int($args[self::COMPILEOPT_LEADING_SPACES]) && $args[self::COMPILEOPT_LEADING_SPACES] >= 0)
             {
-                $compiled[] = $args['leadingSpaces'];
+                $compiled[] = $args[self::COMPILEOPT_LEADING_SPACES];
             }
             else
             {
                 throw $this->createInvalidCompileArgumentValueException(
-                    'leadingSpaces',
+                    self::COMPILEOPT_LEADING_SPACES,
                     'Integer >= 0',
-                    $args['leadingSpaces']
+                    $args[self::COMPILEOPT_LEADING_SPACES]
                 );
             }
         }
-        else
-        {
-            $compiled[] = $_defaults['leadingSpaces'];
-        }
 
-        if (isset($args['includeDefaultValue']))
+        if (isset($args[self::COMPILEOPT_DEFAULT_VALUE]))
         {
-            if (is_bool($args['includeDefaultValue']))
+            if (is_bool($args[self::COMPILEOPT_DEFAULT_VALUE]))
             {
-                $compiled[] = $args['includeDefaultValue'];
+                $compiled[] = $args[self::COMPILEOPT_DEFAULT_VALUE];
             }
             else
             {
                 throw $this->createInvalidCompileArgumentValueException(
-                    'includeDefaultValue',
+                    'COMPILEOPT_DEFAULT_VALUE',
                     'Boolean value (defaults to TRUE)',
                     $args['includeDefaultValue']
                 );
@@ -352,6 +363,39 @@ class VariableTemplate extends AbstractStructureTemplate
      * @param bool $includeDefaultValue
      * @return string
      */
+    private function _compileAsVariable($includeComment, $leadingSpaces, $includeDefaultValue)
+    {
+        $spaces = str_repeat(' ', $leadingSpaces);
+
+        if ($includeComment)
+        {
+            $output = sprintf(
+                '%s%s',
+                $this->_compileClassPropertyDocBlockComment()->compile(array(self::COMPILEOPT_LEADING_SPACES => $leadingSpaces)),
+                $spaces
+            );
+        }
+        else
+        {
+            $output = $spaces;
+        }
+
+        $output = sprintf('%s $%s', $output, (string)$this->getName());
+
+        if ($includeDefaultValue && null !== ($default = $this->getDefaultValueStatement()))
+            $output = sprintf("%s = %s;\n", $output, $default);
+        else
+            $output = sprintf("%s;\n", $output);
+
+        return $output;
+    }
+
+    /**
+     * @param bool $includeComment
+     * @param int $leadingSpaces
+     * @param bool $includeDefaultValue
+     * @return string
+     */
     private function _compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue)
     {
         $spaces = str_repeat(' ', $leadingSpaces);
@@ -360,7 +404,7 @@ class VariableTemplate extends AbstractStructureTemplate
         {
             $output = sprintf(
                 '%s%s%s',
-                $this->_compileClassPropertyDocBlockComment()->compile(array('leadingSpaces' => $leadingSpaces)),
+                $this->_compileClassPropertyDocBlockComment()->compile(array(self::COMPILEOPT_LEADING_SPACES => $leadingSpaces)),
                 $spaces,
                 (string)$this->getScope()
             );

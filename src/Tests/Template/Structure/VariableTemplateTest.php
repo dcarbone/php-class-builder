@@ -283,7 +283,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "        /**\n         * @var mixed\n         */\n        public \$testvar;\n",
-            $variable->compile(array('type' => 'classProperty'))
+            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -298,7 +298,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $variable->setStatic();
         $this->assertEquals(
             "        /**\n         * @var mixed\n         */\n        public static \$testvar;\n",
-            $variable->compile(array('type' => 'classProperty'))
+            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -315,7 +315,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "        /**\n         * @var array\n         */\n        public \$testvar = array();\n",
-            $variable->compile(array('type' => 'classProperty'))
+            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -330,7 +330,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "        public \$testvar;\n",
-            $variable->compile(array('type' => 'classProperty', 'includeComment' => false))
+            $variable->compile(array(
+                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                VariableTemplate::COMPILEOPT_COMMENT => false
+            ))
         );
     }
 
@@ -345,7 +348,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "/**\n * @var mixed\n */\npublic \$testvar;\n",
-            $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 0))
+            $variable->compile(array(
+                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
+            ))
         );
     }
 
@@ -370,7 +376,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenInvalidIncludeCommentArgPassed()
     {
         $variable = new VariableTemplate('testvar');
-        $variable->compile(array('type' => 'classProperty', 'includeComment' => 'sandwiches'));
+        $variable->compile(array(
+            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            VariableTemplate::COMPILEOPT_COMMENT => 'sandwiches'
+        ));
     }
 
     /**
@@ -382,7 +391,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenInvalidLeadingSpacesArgPassed()
     {
         $variable = new VariableTemplate('testvar');
-        $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 'sandwich'));
+        $variable->compile(array(
+            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            VariableTemplate::COMPILEOPT_LEADING_SPACES => 'sandwich'
+        ));
     }
 
     /**
@@ -393,7 +405,9 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     public function testCanCompileAsMethodParameter()
     {
         $variable = new VariableTemplate('testvar');
-        $this->assertEquals('$testvar', $variable->compile(array('type' => 'methodParameter')));
+        $this->assertEquals('$testvar', $variable->compile(array(
+            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_METHOD
+        )));
     }
 
     /**
@@ -404,7 +418,9 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenCompileArgsNotEmptyButTypeNotDefined()
     {
         $variable = new VariableTemplate('testvar');
-        $variable->compile(array('leadingSpaces' => 5));
+        $variable->compile(array(
+            VariableTemplate::COMPILEOPT_LEADING_SPACES => 5
+        ));
     }
 
     /**
@@ -417,10 +433,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'public $testvar = "stringvalue";'."\n",
             $variable->compile(array(
-                'type' => 'classProperty',
-                'includeDefaultValue' => true,
-                'includeComment' => false,
-                'leadingSpaces' => 0
+                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                VariableTemplate::COMPILEOPT_DEFAULT_VALUE => true,
+                VariableTemplate::COMPILEOPT_COMMENT => false,
+                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
             ))
         );
     }
@@ -433,7 +449,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenPassingInvalidIncludeDefaultValueArg()
     {
         $variable = new VariableTemplate('testvar');
-        $variable->compile(array('type' => 'classProperty', 'includeDefaultValue' => 'sandwiches'));
+        $variable->compile(array(
+            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            VariableTemplate::COMPILEOPT_DEFAULT_VALUE => 'sandwiches'
+        ));
     }
 
     /**
@@ -445,7 +464,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $variable->getDocBlockComment()->addLine('@var string');
         $this->assertEquals(
             "/**\n * @var string\n */\npublic \$testvar;\n",
-            $variable->compile(array('type' => 'classProperty', 'leadingSpaces' => 0))
+            $variable->compile(array(
+                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
+            ))
         );
     }
 }
