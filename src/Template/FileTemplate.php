@@ -168,11 +168,19 @@ class FileTemplate extends AbstractTemplate
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultCompileArgs()
+    {
+        return array();
+    }
+
+    /**
      * @param array $args
      * @return array
      */
     protected function parseCompileArgs(array $args)
     {
-        // Nothing to do here yet.
+        return array();
     }
 }

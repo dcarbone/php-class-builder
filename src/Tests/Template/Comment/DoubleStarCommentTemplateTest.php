@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
 
 /**
@@ -89,7 +90,7 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanSetCustomLeadingSpaces(DoubleStarCommentTemplate $comment)
     {
-        $output = $comment->compile(array('leadingSpaces' => 3));
+        $output = $comment->compile(array(CompileOpt::LEADING_SPACES => 3));
         $this->assertEquals("   /**\n    * this crazy comment\n    * extends across 2 lines!\n    */\n", $output);
     }
 
@@ -100,7 +101,7 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownWhenPassingInvalidLeadingSpacesValue()
     {
         $comment = new DoubleStarCommentTemplate();
-        $comment->compile(array('leadingSpaces' => 'sandwiches'));
+        $comment->compile(array(CompileOpt::LEADING_SPACES => 'sandwiches'));
     }
 
     /**

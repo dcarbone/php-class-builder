@@ -48,6 +48,11 @@ abstract class AbstractTemplate
     abstract protected function parseCompileArgs(array $args);
 
     /**
+     * @return array
+     */
+    abstract public function getDefaultCompileArgs();
+
+    /**
      * @return string
      */
     public function __toString()

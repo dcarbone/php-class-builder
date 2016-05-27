@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate;
 
@@ -283,7 +284,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "        /**\n         * @var mixed\n         */\n        public \$testvar;\n",
-            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
+            $variable->compile(array(CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -298,7 +299,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $variable->setStatic();
         $this->assertEquals(
             "        /**\n         * @var mixed\n         */\n        public static \$testvar;\n",
-            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
+            $variable->compile(array(CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -315,7 +316,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "        /**\n         * @var array\n         */\n        public \$testvar = array();\n",
-            $variable->compile(array(VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
+            $variable->compile(array(CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY))
         );
     }
 
@@ -331,8 +332,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             "        public \$testvar;\n",
             $variable->compile(array(
-                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-                VariableTemplate::COMPILEOPT_COMMENT => false
+                CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                CompileOpt::INC_COMMENT => false
             ))
         );
     }
@@ -349,22 +350,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             "/**\n * @var mixed\n */\npublic \$testvar;\n",
             $variable->compile(array(
-                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
+                CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                CompileOpt::LEADING_SPACES => 0
             ))
         );
-    }
-
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
-     */
-    public function testExceptionThrownWhenNotSpecifyingCompileType()
-    {
-        $variable = new VariableTemplate('testvar');
-        $variable->compile();
     }
 
     /**
@@ -377,8 +366,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $variable->compile(array(
-            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-            VariableTemplate::COMPILEOPT_COMMENT => 'sandwiches'
+            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            CompileOpt::INC_COMMENT => 'sandwiches'
         ));
     }
 
@@ -392,8 +381,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $variable->compile(array(
-            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-            VariableTemplate::COMPILEOPT_LEADING_SPACES => 'sandwich'
+            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            CompileOpt::LEADING_SPACES => 'sandwich'
         ));
     }
 
@@ -406,21 +395,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $this->assertEquals('$testvar', $variable->compile(array(
-            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_METHOD
+            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_METHOD
         )));
-    }
-
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
-     */
-    public function testExceptionThrownWhenCompileArgsNotEmptyButTypeNotDefined()
-    {
-        $variable = new VariableTemplate('testvar');
-        $variable->compile(array(
-            VariableTemplate::COMPILEOPT_LEADING_SPACES => 5
-        ));
     }
 
     /**
@@ -433,10 +409,10 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'public $testvar = "stringvalue";'."\n",
             $variable->compile(array(
-                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-                VariableTemplate::COMPILEOPT_DEFAULT_VALUE => true,
-                VariableTemplate::COMPILEOPT_COMMENT => false,
-                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
+                CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                CompileOpt::INC_DEFAULT_VALUE => true,
+                CompileOpt::INC_COMMENT => false,
+                CompileOpt::LEADING_SPACES => 0
             ))
         );
     }
@@ -450,8 +426,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $variable->compile(array(
-            VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-            VariableTemplate::COMPILEOPT_DEFAULT_VALUE => 'sandwiches'
+            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+            CompileOpt::INC_DEFAULT_VALUE => 'sandwiches'
         ));
     }
 
@@ -465,8 +441,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             "/**\n * @var string\n */\npublic \$testvar;\n",
             $variable->compile(array(
-                VariableTemplate::COMPILEOPT_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
-                VariableTemplate::COMPILEOPT_LEADING_SPACES => 0
+                CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PROPERTY,
+                CompileOpt::LEADING_SPACES => 0
             ))
         );
     }

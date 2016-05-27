@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate;
 
 /**
@@ -82,7 +83,7 @@ class SingleStarCommentTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanSetCustomLeadingSpaces(SingleStarCommentTemplate $comment)
     {
-        $output = $comment->compile(array('leadingSpaces' => 3));
+        $output = $comment->compile(array(CompileOpt::LEADING_SPACES => 3));
         $this->assertEquals("   /*\n    * this crazy comment\n    * extends across 2 lines!\n    */\n", $output);
     }
 

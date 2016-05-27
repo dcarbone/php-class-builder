@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\AbstractTemplate;
 
 /**
@@ -166,6 +167,18 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultCompileArgs()
+    {
+        static $_defaults = array(
+            CompileOpt::LEADING_SPACES => 4
+        );
+
+        return $_defaults;
+    }
+
+    /**
      * Count elements of an object
      * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
@@ -232,18 +245,19 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      */
     protected function parseCompileArgs(array $args)
     {
-        static $defaults = array('leadingSpaces' => 4);
+        $args = $args + $this->getDefaultCompileArgs();
 
-        if (0 === count($args))
-            return array($defaults['leadingSpaces']);
-
-        if (isset($args['leadingSpaces']) && is_int($args['leadingSpaces']) && $args['leadingSpaces'] >= 0)
-            return array($args['leadingSpaces']);
+        if (isset($args[CompileOpt::LEADING_SPACES])
+            && is_int($args[CompileOpt::LEADING_SPACES])
+            && $args[CompileOpt::LEADING_SPACES] >= 0)
+        {
+            return array($args[CompileOpt::LEADING_SPACES]);
+        }
 
         throw $this->createInvalidCompileArgumentValueException(
-            'leadingSpaces',
+            'CompileOpt::LEADING_SPACES',
             'integer >= 0',
-            (isset($args['leadingSpaces']) ? $args['leadingSpaces'] : 'UNDEFINED')
+            (isset($args[CompileOpt::LEADING_SPACES]) ? $args[CompileOpt::LEADING_SPACES] : 'UNDEFINED')
         );
     }
 

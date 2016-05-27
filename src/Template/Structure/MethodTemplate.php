@@ -25,6 +25,8 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
  */
 class MethodTemplate extends AbstractStructureTemplate
 {
+    const COMPILEOPT_INCLUDE_BODY = 0;
+
     /** @var string */
     private $_name = null;
     /** @var ScopeEnum */
@@ -225,26 +227,30 @@ class MethodTemplate extends AbstractStructureTemplate
         // TODO: Implement compile() method.
     }
 
+    public function getDefaultCompileArgs()
+    {
+        static $_defaults = array(
+            self::COMPILEOPT_INCLUDE_BODY => true
+        );
+
+        return $_defaults;
+    }
+
     /**
      * @param array $args
      * @return array
      */
     protected function parseCompileArgs(array $args)
     {
-        static $defaults = array(
-            'includeBody' => true
-        );
+        $args = $args + $this->getDefaultCompileArgs();
 
-        if (count($args) === 0)
-            return $defaults;
-
-        if (isset($args['includeBody']) && is_bool($args['includeBody']))
-            return array($args['includeBody']);
+        if (isset($args[self::COMPILEOPT_INCLUDE_BODY]) && is_bool($args[self::COMPILEOPT_INCLUDE_BODY]))
+            return array($args[self::COMPILEOPT_INCLUDE_BODY]);
 
         throw $this->createInvalidCompileArgumentValueException(
-            'includeBody',
+            'MethodTemplate::COMPILEOPT_INCLUDE_BODY',
             'boolean value',
-            isset($args['includeBody']) ? $args['includeBody'] : 'UNDEFINED'
+            isset($args[self::COMPILEOPT_INCLUDE_BODY]) ? $args[self::COMPILEOPT_INCLUDE_BODY] : 'UNDEFINED'
         );
     }
 }

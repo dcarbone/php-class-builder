@@ -197,6 +197,14 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultCompileArgs()
+    {
+        // TODO: Implement getDefaultCompileArgs() method.
+    }
+
+    /**
      * @param array $args
      * @return array
      */

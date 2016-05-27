@@ -294,9 +294,7 @@ class ClassTemplate extends AbstractStructureTemplate
         if (null === $this->_name)
             throw $this->createInvalidClassNameException($this->_name);
 
-        list($inFile) = $this->parseCompileArgs($args);
-
-        if ($inFile)
+        if ($this->inFile())
         {
             $output = '';
         }
@@ -357,23 +355,20 @@ class ClassTemplate extends AbstractStructureTemplate
     }
 
     /**
+     * @return array
+     */
+    public function getDefaultCompileArgs()
+    {
+        return array();
+    }
+
+    /**
      * @param array $args
      * @return array
      */
     protected function parseCompileArgs(array $args)
     {
-        static $defaults = array('inFile' => true);
-
-        if (0 === count($args))
-            return array($defaults['inFile']);
-
-        if (isset($args['inFile']) && is_bool($args['inFile']))
-            return array($args['inFile']);
-
-        throw $this->createInvalidCompileArgumentValueException(
-            'inFile', 'boolean value',
-            isset($args['inFile']) ? $args['inFile'] : 'UNDEFINED'
-        );
+        return array();
     }
 
     /**
