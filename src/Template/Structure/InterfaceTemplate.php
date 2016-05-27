@@ -188,10 +188,10 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
         // TODO: Implement compile() method.
     }
@@ -199,16 +199,16 @@ class InterfaceTemplate extends AbstractStructureTemplate
     /**
      * @return array
      */
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         // TODO: Implement getDefaultCompileArgs() method.
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
         // Nothing to do here yet...
     }

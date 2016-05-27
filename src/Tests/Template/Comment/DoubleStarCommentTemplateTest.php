@@ -36,7 +36,7 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
      * @param DoubleStarCommentTemplate $comment
      */
@@ -84,7 +84,7 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::addLine
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseStringInput
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileOpts
      * @depends testCanAddMultilineComment
      * @param DoubleStarCommentTemplate $comment
      */
@@ -95,8 +95,8 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileArgs
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileOpts
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     public function testExceptionThrownWhenPassingInvalidLeadingSpacesValue()
     {

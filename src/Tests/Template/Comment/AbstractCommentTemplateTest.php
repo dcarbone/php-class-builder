@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 
 /**
  * Class AbstractCommentTemplateTest
@@ -317,5 +318,22 @@ class AbstractCommentTemplateTest extends \PHPUnit_Framework_TestCase
         $stub->removeLineByValue('multipass');
         $this->assertCount(1, $stub);
         $this->assertEquals(0, $stub->getLineIndex('multiline'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate::getDefaultCompileOpts
+     */
+    public function testCanGetDefaultCompileOpts()
+    {
+        $stub = $this
+            ->getMockBuilder(self::$_className)
+            ->getMockForAbstractClass();
+
+        $this->assertTrue(method_exists($stub, 'getDefaultCompileOpts'), 'AbstractCommentTemplate is missing method "getDefaultCompileOpts"');
+        $opts = $stub->getDefaultCompileOpts();
+        $this->assertInternalType('array', $opts);
+        $this->assertCount(1, $opts);
+        $this->assertArrayHasKey(CompileOpt::LEADING_SPACES, $opts);
+        $this->assertEquals(4, $opts[CompileOpt::LEADING_SPACES]);
     }
 }

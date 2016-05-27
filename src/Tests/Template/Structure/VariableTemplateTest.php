@@ -274,7 +274,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
      */
@@ -290,7 +290,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
      */
     public function testCanCompileAsStaticClassProperty()
@@ -305,7 +305,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
      */
     public function testCanCompileAsClassPropertyWithDefaultValue()
@@ -322,7 +322,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
      */
     public function testCanCompileAsClassPropertyWithoutComment()
@@ -340,7 +340,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
      */
     public function testCanCompileAsClassVarWithCustomLeadingSpaces()
@@ -358,9 +358,9 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     public function testExceptionThrownWhenInvalidIncludeCommentArgPassed()
     {
@@ -373,9 +373,9 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     public function testExceptionThrownWhenInvalidLeadingSpacesArgPassed()
     {
@@ -388,7 +388,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsMethodParameter
      */
     public function testCanCompileAsMethodParameter()
@@ -400,7 +400,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      */
     public function testCanIncludeDefaultValue()
     {
@@ -419,8 +419,8 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileArgs
-     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     public function testExceptionThrownWhenPassingInvalidIncludeDefaultValueArg()
     {

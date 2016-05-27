@@ -219,15 +219,15 @@ class MethodTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
         // TODO: Implement compile() method.
     }
 
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         static $_defaults = array(
             self::COMPILEOPT_INCLUDE_BODY => true
@@ -237,20 +237,20 @@ class MethodTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
-        $args = $args + $this->getDefaultCompileArgs();
+        $opts = $opts + $this->getDefaultCompileOpts();
 
-        if (isset($args[self::COMPILEOPT_INCLUDE_BODY]) && is_bool($args[self::COMPILEOPT_INCLUDE_BODY]))
-            return array($args[self::COMPILEOPT_INCLUDE_BODY]);
+        if (isset($opts[self::COMPILEOPT_INCLUDE_BODY]) && is_bool($opts[self::COMPILEOPT_INCLUDE_BODY]))
+            return array($opts[self::COMPILEOPT_INCLUDE_BODY]);
 
-        throw $this->createInvalidCompileArgumentValueException(
+        throw $this->createInvalidCompileOptionValueException(
             'MethodTemplate::COMPILEOPT_INCLUDE_BODY',
             'boolean value',
-            isset($args[self::COMPILEOPT_INCLUDE_BODY]) ? $args[self::COMPILEOPT_INCLUDE_BODY] : 'UNDEFINED'
+            isset($opts[self::COMPILEOPT_INCLUDE_BODY]) ? $opts[self::COMPILEOPT_INCLUDE_BODY] : 'UNDEFINED'
         );
     }
 }

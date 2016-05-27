@@ -116,10 +116,10 @@ class FileTemplate extends AbstractTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
         $file = '<?php';
 
@@ -170,16 +170,16 @@ class FileTemplate extends AbstractTemplate
     /**
      * @return array
      */
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         return array();
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
         return array();
     }

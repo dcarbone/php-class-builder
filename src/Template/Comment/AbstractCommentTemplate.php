@@ -56,7 +56,7 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
             {
                 case 'string':
                     if ($this->testStringForNewlines($line))
-                        $this->addlines($this->parseStringInput($line));
+                        $this->addLines($this->parseStringInput($line));
                     else
                         $this->_lines[] = $line;
                     break;
@@ -111,7 +111,7 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
         $this->_lines = array();
         foreach($lines as $line)
         {
-            $this->addline($line);
+            $this->addLine($line);
         }
     }
 
@@ -169,7 +169,7 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     /**
      * @return array
      */
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         static $_defaults = array(
             CompileOpt::LEADING_SPACES => 4
@@ -239,25 +239,25 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
-        $args = $args + $this->getDefaultCompileArgs();
+        $opts = $opts + $this->getDefaultCompileOpts();
 
-        if (isset($args[CompileOpt::LEADING_SPACES])
-            && is_int($args[CompileOpt::LEADING_SPACES])
-            && $args[CompileOpt::LEADING_SPACES] >= 0)
+        if (isset($opts[CompileOpt::LEADING_SPACES])
+            && is_int($opts[CompileOpt::LEADING_SPACES])
+            && $opts[CompileOpt::LEADING_SPACES] >= 0)
         {
-            return array($args[CompileOpt::LEADING_SPACES]);
+            return array($opts[CompileOpt::LEADING_SPACES]);
         }
 
-        throw $this->createInvalidCompileArgumentValueException(
+        throw $this->createInvalidCompileOptionValueException(
             'CompileOpt::LEADING_SPACES',
             'integer >= 0',
-            (isset($args[CompileOpt::LEADING_SPACES]) ? $args[CompileOpt::LEADING_SPACES] : 'UNDEFINED')
+            (isset($opts[CompileOpt::LEADING_SPACES]) ? $opts[CompileOpt::LEADING_SPACES] : 'UNDEFINED')
         );
     }
 

@@ -61,12 +61,12 @@ class SingleStarCommentTemplate extends AbstractCommentTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
-        list($leadingSpaces) = $this->parseCompileArgs($args);
+        list($leadingSpaces) = $this->parseCompileOpts($opts);
 
         $spaces = str_repeat(' ', $leadingSpaces);
         $lines = $this->getLines();

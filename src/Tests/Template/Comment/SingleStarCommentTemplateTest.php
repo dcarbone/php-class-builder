@@ -36,7 +36,7 @@ class SingleStarCommentTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseCompileArgs
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseCompileOpts
      * @depends testCanConstructComment
      * @param SingleStarCommentTemplate $comment
      */

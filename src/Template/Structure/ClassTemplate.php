@@ -286,10 +286,10 @@ class ClassTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
         if (null === $this->_name)
             throw $this->createInvalidClassNameException($this->_name);
@@ -357,16 +357,16 @@ class ClassTemplate extends AbstractStructureTemplate
     /**
      * @return array
      */
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         return array();
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
         return array();
     }

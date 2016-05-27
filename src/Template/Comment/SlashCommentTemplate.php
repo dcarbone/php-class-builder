@@ -23,12 +23,12 @@
 class SlashCommentTemplate extends AbstractCommentTemplate
 {
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
-        list($leadingSpaces) = $this->parseCompileArgs($args);
+        list($leadingSpaces) = $this->parseCompileOpts($opts);
 
         $output = '';
         $leadingSpaces = str_repeat(' ', $leadingSpaces);

@@ -20,7 +20,7 @@ use DCarbone\PHPClassBuilder\Exception\CommentLineIndexNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\FilePartNotFoundException;
 use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException;
-use DCarbone\PHPClassBuilder\Exception\InvalidCompileArgumentValueException;
+use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidMethodNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
@@ -36,21 +36,21 @@ abstract class AbstractTemplate
     /**
      * TODO: This method of passing arguments is flawed and could become cumbersome quickly.
      *
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    abstract public function compile(array $args = array());
+    abstract public function compile(array $opts = array());
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    abstract protected function parseCompileArgs(array $args);
+    abstract protected function parseCompileOpts(array $opts);
 
     /**
      * @return array
      */
-    abstract public function getDefaultCompileArgs();
+    abstract public function getDefaultCompileOpts();
 
     /**
      * @return string
@@ -116,11 +116,11 @@ abstract class AbstractTemplate
      * @param string $arg
      * @param string $expectedStatement
      * @param mixed $actualValue
-     * @return InvalidCompileArgumentValueException
+     * @return InvalidCompileOptionValueException
      */
-    protected function createInvalidCompileArgumentValueException($arg, $expectedStatement, $actualValue)
+    protected function createInvalidCompileOptionValueException($arg, $expectedStatement, $actualValue)
     {
-        return new InvalidCompileArgumentValueException(sprintf(
+        return new InvalidCompileOptionValueException(sprintf(
             '%s - Specified invalid value "%s" for compile argument "%s". Expected: %s',
             get_class($this),
             $this->_determineExceptionValueOutput($actualValue),

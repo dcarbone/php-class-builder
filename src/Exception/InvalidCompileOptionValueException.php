@@ -17,10 +17,10 @@
  */
 
 /**
- * Class InvalidCompileArgumentValueException
+ * Class InvalidCompileOptionValueException
  * @package DCarbone\PHPClassBuilder\Exception
  */
-class InvalidCompileArgumentValueException extends \InvalidArgumentException
+class InvalidCompileOptionValueException extends \InvalidArgumentException
 {
 
 }

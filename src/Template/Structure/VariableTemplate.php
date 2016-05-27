@@ -236,16 +236,16 @@ class VariableTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return string
      */
-    public function compile(array $args = array())
+    public function compile(array $opts = array())
     {
         list(
             $type,
             $includeComment,
             $leadingSpaces,
-            $includeDefaultValue) = $this->parseCompileArgs($args);
+            $includeDefaultValue) = $this->parseCompileOpts($opts);
 
         switch($type)
         {
@@ -264,7 +264,7 @@ class VariableTemplate extends AbstractStructureTemplate
     /**
      * @return array
      */
-    public function getDefaultCompileArgs()
+    public function getDefaultCompileOpts()
     {
         static $_defaults = array(
             CompileOpt::COMPILE_TYPE => self::COMPILETYPE_VARIABLE,
@@ -277,75 +277,75 @@ class VariableTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param array $args
+     * @param array $opts
      * @return array
      */
-    protected function parseCompileArgs(array $args)
+    protected function parseCompileOpts(array $opts)
     {
-        $args = $args + $this->getDefaultCompileArgs();
+        $opts = $opts + $this->getDefaultCompileOpts();
 
         $compiled = array();
 
-        switch($args[CompileOpt::COMPILE_TYPE])
+        switch($opts[CompileOpt::COMPILE_TYPE])
         {
             case self::COMPILETYPE_VARIABLE:
             case self::COMPILETYPE_METHOD:
             case self::COMPILETYPE_PROPERTY:
-                $compiled[] = $args[CompileOpt::COMPILE_TYPE];
+                $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
                 break;
 
             default:
-                throw $this->createInvalidCompileArgumentValueException(
+                throw $this->createInvalidCompileOptionValueException(
                     'CompileOpt::COMPILE_TYPE',
                     'VariableTemplate::COMPILETYPE_VARIABLE, VariableTemplate::COMPILETYPE_METHOD, VariableTemplate::COMPILETYPE_PROPERTY',
-                    $args[CompileOpt::COMPILE_TYPE]
+                    $opts[CompileOpt::COMPILE_TYPE]
                 );
         }
 
-        if (isset($args[CompileOpt::INC_COMMENT]))
+        if (isset($opts[CompileOpt::INC_COMMENT]))
         {
-            if (is_bool($args[CompileOpt::INC_COMMENT]))
+            if (is_bool($opts[CompileOpt::INC_COMMENT]))
             {
-                $compiled[] = $args[CompileOpt::INC_COMMENT];
+                $compiled[] = $opts[CompileOpt::INC_COMMENT];
             }
             else
             {
-                throw $this->createInvalidCompileArgumentValueException(
+                throw $this->createInvalidCompileOptionValueException(
                     'CompileOpt::INC_COMMENT',
                     'Boolean value (defaults to TRUE)',
-                    $args[CompileOpt::INC_COMMENT]
+                    $opts[CompileOpt::INC_COMMENT]
                 );
             }
         }
 
-        if (isset($args[CompileOpt::LEADING_SPACES]))
+        if (isset($opts[CompileOpt::LEADING_SPACES]))
         {
-            if (is_int($args[CompileOpt::LEADING_SPACES]) && $args[CompileOpt::LEADING_SPACES] >= 0)
+            if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0)
             {
-                $compiled[] = $args[CompileOpt::LEADING_SPACES];
+                $compiled[] = $opts[CompileOpt::LEADING_SPACES];
             }
             else
             {
-                throw $this->createInvalidCompileArgumentValueException(
+                throw $this->createInvalidCompileOptionValueException(
                     'CompileOpt::LEADING_SPACES',
                     'Integer >= 0',
-                    $args[CompileOpt::LEADING_SPACES]
+                    $opts[CompileOpt::LEADING_SPACES]
                 );
             }
         }
 
-        if (isset($args[CompileOpt::INC_DEFAULT_VALUE]))
+        if (isset($opts[CompileOpt::INC_DEFAULT_VALUE]))
         {
-            if (is_bool($args[CompileOpt::INC_DEFAULT_VALUE]))
+            if (is_bool($opts[CompileOpt::INC_DEFAULT_VALUE]))
             {
-                $compiled[] = $args[CompileOpt::INC_DEFAULT_VALUE];
+                $compiled[] = $opts[CompileOpt::INC_DEFAULT_VALUE];
             }
             else
             {
-                throw $this->createInvalidCompileArgumentValueException(
+                throw $this->createInvalidCompileOptionValueException(
                     'CompileOpt::INC_DEFAULT_VALUE',
                     'Boolean value (defaults to TRUE)',
-                    $args[CompileOpt::INC_DEFAULT_VALUE]
+                    $opts[CompileOpt::INC_DEFAULT_VALUE]
                 );
             }
         }
