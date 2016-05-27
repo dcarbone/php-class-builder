@@ -349,10 +349,6 @@ class VariableTemplate extends AbstractStructureTemplate
                 );
             }
         }
-        else
-        {
-            $compiled[] = true;
-        }
 
         return $compiled;
     }
@@ -380,7 +376,7 @@ class VariableTemplate extends AbstractStructureTemplate
             $output = $spaces;
         }
 
-        $output = sprintf('%s $%s', $output, (string)$this->getName());
+        $output = sprintf('%s$%s', $output, (string)$this->getName());
 
         if ($includeDefaultValue && null !== ($default = $this->getDefaultValueStatement()))
             $output = sprintf("%s = %s;\n", $output, $default);

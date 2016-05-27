@@ -271,6 +271,54 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
         $variable = new VariableTemplate('testvar');
         $this->assertEquals('@param mixed $testvar', $variable->getMethodParameterAnnotation());
     }
+    
+    public function testCanGetDefaultCompileOpts()
+    {
+        $variable = new VariableTemplate('testvar');
+        $this->assertTrue(method_exists($variable, 'getDefaultCompileOpts'));
+        $opts = $variable->getDefaultCompileOpts();
+        $this->assertInternalType('array', $opts);
+        $this->assertEquals(
+            array(
+                CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_VARIABLE,
+                CompileOpt::INC_COMMENT => true,
+                CompileOpt::LEADING_SPACES => 8,
+                CompileOpt::INC_DEFAULT_VALUE => true
+            ),
+            $opts
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsVariable
+     */
+    public function testCanCompileAsVariable()
+    {
+        $variable = new VariableTemplate('testvar');
+
+        $this->assertEquals(
+            "        /**\n         * @var mixed\n         */\n        \$testvar;\n",
+            $variable->compile()
+        );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsVariable
+     */
+    public function testCanCompileAsVariableWithoutComment()
+    {
+        $variable = new VariableTemplate('testvar');
+
+        $this->assertEquals(
+            "        \$testvar;\n",
+            $variable->compile(array(CompileOpt::INC_COMMENT => false))
+        );
+    }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
@@ -354,6 +402,17 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
                 CompileOpt::LEADING_SPACES => 0
             ))
         );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     */
+    public function testExceptionThrownWhenPassingInvalidCompileTypeOption()
+    {
+        $variable = new VariableTemplate('testvar');
+        $variable->compile(array(CompileOpt::COMPILE_TYPE => 'thursday'));
     }
 
     /**
