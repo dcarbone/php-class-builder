@@ -194,8 +194,11 @@ class ClassTemplate extends AbstractStructureTemplate
      * @param bool $abstract
      * @return FunctionTemplate
      */
-    public function createFunction($name, ScopeEnum $scope = ScopeEnum::_PUBLIC, $static = false, $abstract = false)
+    public function createFunction($name, ScopeEnum $scope = null, $static = false, $abstract = false)
     {
+        if (null == $scope)
+            $scope = new ScopeEnum(ScopeEnum::_PUBLIC);
+
         $this->addFunction(new FunctionTemplate($name, $scope, $static, $abstract));
         return $this->getFunction($name);
     }
