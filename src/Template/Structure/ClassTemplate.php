@@ -247,8 +247,11 @@ class ClassTemplate extends AbstractStructureTemplate
      * @param bool $requireSetter
      * @return VariableTemplate|null
      */
-    public function createProperty($name, ScopeEnum $scope = ScopeEnum::_PUBLIC, $requireGetter = true, $requireSetter = true)
+    public function createProperty($name, ScopeEnum $scope = null, $requireGetter = true, $requireSetter = true)
     {
+        if (null === $scope)
+            $scope = new ScopeEnum(ScopeEnum::_PUBLIC);
+
         $this->addProperty(new VariableTemplate($name, $scope, $requireGetter, $requireSetter));
         return $this->getProperty($name);
     }
