@@ -84,7 +84,7 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @return MethodTemplate[]
+     * @return FunctionTemplate[]
      */
     public function getMethods()
     {
@@ -92,9 +92,9 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param MethodTemplate $method
+     * @param FunctionTemplate $method
      */
-    public function addMethod(MethodTemplate $method)
+    public function addMethod(FunctionTemplate $method)
     {
         $this->_methods[$method->getName()] = $method;
     }
@@ -110,7 +110,7 @@ class InterfaceTemplate extends AbstractStructureTemplate
 
     /**
      * @param string $name
-     * @return MethodTemplate|null
+     * @return FunctionTemplate|null
      */
     public function getMethod($name)
     {

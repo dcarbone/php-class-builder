@@ -22,10 +22,12 @@ use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
-use DCarbone\PHPClassBuilder\Exception\InvalidMethodNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyLineArgumentException;
+use DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
 use DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException;
+use DCarbone\PHPClassBuilder\Exception\MissingNameException;
 
 /**
  * Class AbstractTemplate
@@ -88,11 +90,11 @@ abstract class AbstractTemplate
 
     /**
      * @param mixed $name
-     * @return InvalidMethodNameException
+     * @return InvalidFunctionNameException
      */
-    protected function createInvalidMethodNameException($name)
+    protected function createInvalidFunctionNameException($name)
     {
-        return new InvalidMethodNameException(sprintf(
+        return new InvalidFunctionNameException(sprintf(
             '%s - Specified method name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information',
             get_class($this),
             $this->_determineExceptionValueOutput($name)
@@ -101,7 +103,7 @@ abstract class AbstractTemplate
 
     /**
      * @param mixed $name
-     * @return InvalidMethodNameException
+     * @return InvalidFunctionNameException
      */
     protected function createInvalidVariableNameException($name)
     {
@@ -109,6 +111,19 @@ abstract class AbstractTemplate
             '%s - Specified variable name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information',
             get_class($this),
             $this->_determineExceptionValueOutput($name)
+        ));
+    }
+
+    /**
+     * @param string $context
+     * @return MissingNameException
+     */
+    protected function createMissingNameException($context)
+    {
+        return new MissingNameException(sprintf(
+            '%s - %s',
+            get_class($this),
+            $context
         ));
     }
 
@@ -191,6 +206,19 @@ abstract class AbstractTemplate
             '%s - Comment has no line at index "%s"',
             get_class($this),
             $this->_determineExceptionValueOutput($offset)
+        ));
+    }
+
+    /**
+     * @param mixed $line
+     * @return InvalidFunctionBodyLineArgumentException
+     */
+    protected function createInvalidFunctionBodyLineArgumentExcception($line)
+    {
+        return new InvalidFunctionBodyLineArgumentException(sprintf(
+            '%s - Function body lines must be strings, %s seen.',
+            get_class($this),
+            $this->_determineExceptionValueOutput($line)
         ));
     }
 

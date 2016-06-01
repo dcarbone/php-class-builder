@@ -41,7 +41,7 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getParent
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::isAbstract
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getInterfaces
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getMethods
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getFunctions
      * @depends testCanConstructWithoutArguments
      * @param ClassTemplate $classTemplate
      */
@@ -53,7 +53,7 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($classTemplate->getProperties());
         $this->assertFalse($classTemplate->isAbstract());
         $this->assertEmpty($classTemplate->getInterfaces());
-        $this->assertEmpty($classTemplate->getMethods());
+        $this->assertEmpty($classTemplate->getFunctions());
     }
 
     /**

@@ -30,7 +30,7 @@ class VariableTemplate extends AbstractStructureTemplate
     // Compile template as bare variable
     const COMPILETYPE_VARIABLE = 1;
     // Compile template as method parameter
-    const COMPILETYPE_METHOD = 2;
+    const COMPILETYPE_PARAMETER = 2;
     // Compile template as class property
     const COMPILETYPE_PROPERTY = 3;
 
@@ -253,7 +253,7 @@ class VariableTemplate extends AbstractStructureTemplate
                 return $this->_compileAsVariable($includeComment, $leadingSpaces, $includeDefaultValue);
             case self::COMPILETYPE_PROPERTY:
                 return $this->_compileAsClassProperty($includeComment, $leadingSpaces, $includeDefaultValue);
-            case self::COMPILETYPE_METHOD:
+            case self::COMPILETYPE_PARAMETER:
                 return $this->_compileAsMethodParameter($includeDefaultValue);
 
             // TODO: Should not be reachable, but do something?
@@ -289,7 +289,7 @@ class VariableTemplate extends AbstractStructureTemplate
         switch($opts[CompileOpt::COMPILE_TYPE])
         {
             case self::COMPILETYPE_VARIABLE:
-            case self::COMPILETYPE_METHOD:
+            case self::COMPILETYPE_PARAMETER:
             case self::COMPILETYPE_PROPERTY:
                 $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
                 break;
@@ -302,52 +302,43 @@ class VariableTemplate extends AbstractStructureTemplate
                 );
         }
 
-        if (isset($opts[CompileOpt::INC_COMMENT]))
+        if (is_bool($opts[CompileOpt::INC_COMMENT]))
         {
-            if (is_bool($opts[CompileOpt::INC_COMMENT]))
-            {
-                $compiled[] = $opts[CompileOpt::INC_COMMENT];
-            }
-            else
-            {
-                throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::INC_COMMENT',
-                    'Boolean value (defaults to TRUE)',
-                    $opts[CompileOpt::INC_COMMENT]
-                );
-            }
+            $compiled[] = $opts[CompileOpt::INC_COMMENT];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::INC_COMMENT',
+                'Boolean value (defaults to TRUE)',
+                $opts[CompileOpt::INC_COMMENT]
+            );
         }
 
-        if (isset($opts[CompileOpt::LEADING_SPACES]))
+        if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0)
         {
-            if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0)
-            {
-                $compiled[] = $opts[CompileOpt::LEADING_SPACES];
-            }
-            else
-            {
-                throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::LEADING_SPACES',
-                    'Integer >= 0',
-                    $opts[CompileOpt::LEADING_SPACES]
-                );
-            }
+            $compiled[] = $opts[CompileOpt::LEADING_SPACES];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::LEADING_SPACES',
+                'Integer >= 0',
+                $opts[CompileOpt::LEADING_SPACES]
+            );
         }
 
-        if (isset($opts[CompileOpt::INC_DEFAULT_VALUE]))
+        if (is_bool($opts[CompileOpt::INC_DEFAULT_VALUE]))
         {
-            if (is_bool($opts[CompileOpt::INC_DEFAULT_VALUE]))
-            {
-                $compiled[] = $opts[CompileOpt::INC_DEFAULT_VALUE];
-            }
-            else
-            {
-                throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::INC_DEFAULT_VALUE',
-                    'Boolean value (defaults to TRUE)',
-                    $opts[CompileOpt::INC_DEFAULT_VALUE]
-                );
-            }
+            $compiled[] = $opts[CompileOpt::INC_DEFAULT_VALUE];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::INC_DEFAULT_VALUE',
+                'Boolean value (defaults to TRUE)',
+                $opts[CompileOpt::INC_DEFAULT_VALUE]
+            );
         }
 
         return $compiled;
@@ -367,7 +358,7 @@ class VariableTemplate extends AbstractStructureTemplate
         {
             $output = sprintf(
                 '%s%s',
-                $this->_compileClassPropertyDocBlockComment()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
+                $this->_buildDocBloc()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
                 $spaces
             );
         }
@@ -400,7 +391,7 @@ class VariableTemplate extends AbstractStructureTemplate
         {
             $output = sprintf(
                 '%s%s%s',
-                $this->_compileClassPropertyDocBlockComment()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
+                $this->_buildDocBloc()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
                 $spaces,
                 (string)$this->getScope()
             );
@@ -440,7 +431,7 @@ class VariableTemplate extends AbstractStructureTemplate
     /**
      * @return DoubleStarCommentTemplate
      */
-    private function _compileClassPropertyDocBlockComment()
+    private function _buildDocBloc()
     {
         $comment = $this->getDocBlockComment();
         $addAnnotation = true;

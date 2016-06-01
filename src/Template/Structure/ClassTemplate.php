@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Template\FileTemplate;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
@@ -33,8 +34,8 @@ class ClassTemplate extends AbstractStructureTemplate
     private $_interfaces = array();
     /** @var bool */
     private $_abstract = false;
-    /** @var MethodTemplate[] */
-    private $_methods = array();
+    /** @var FunctionTemplate[] */
+    private $_functions = array();
     /** @var VariableTemplate[] */
     private $_properties = array();
     /** @var null|string */
@@ -150,40 +151,53 @@ class ClassTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @return MethodTemplate[]
+     * @return FunctionTemplate[]
      */
-    public function getMethods()
+    public function getFunctions()
     {
-        return $this->_methods;
+        return $this->_functions;
     }
 
     /**
-     * @param MethodTemplate $method
+     * @param FunctionTemplate $function
      */
-    public function addMethod(MethodTemplate $method)
+    public function addFunction(FunctionTemplate $function)
     {
-        $this->_methods[$method->getName()] = $method;
+        $this->_functions[$function->getName()] = $function;
     }
 
     /**
      * @param string $name
      * @return bool
      */
-    public function hasMethod($name)
+    public function hasFunction($name)
     {
-        return isset($this->_methods[$name]);
+        return isset($this->_functions[$name]);
     }
 
     /**
      * @param string $name
-     * @return MethodTemplate|null
+     * @return FunctionTemplate|null
      */
-    public function getMethod($name)
+    public function getFunction($name)
     {
-        if (isset($this->_methods[$name]))
-            return $this->_methods[$name];
+        if (isset($this->_functions[$name]))
+            return $this->_functions[$name];
 
         return null;
+    }
+
+    /**
+     * @param string $name
+     * @param ScopeEnum $scope
+     * @param bool $static
+     * @param bool $abstract
+     * @return FunctionTemplate
+     */
+    public function createFunction($name, ScopeEnum $scope = ScopeEnum::_PUBLIC, $static = false, $abstract = false)
+    {
+        $this->addFunction(new FunctionTemplate($name, $scope, $static, $abstract));
+        return $this->getFunction($name);
     }
 
     /**
@@ -221,6 +235,19 @@ class ClassTemplate extends AbstractStructureTemplate
             return $this->_properties[$name];
 
         return null;
+    }
+
+    /**
+     * @param string $name
+     * @param ScopeEnum $scope
+     * @param bool $requireGetter
+     * @param bool $requireSetter
+     * @return VariableTemplate|null
+     */
+    public function createProperty($name, ScopeEnum $scope = ScopeEnum::_PUBLIC, $requireGetter = true, $requireSetter = true)
+    {
+        $this->addProperty(new VariableTemplate($name, $scope, $requireGetter, $requireSetter));
+        return $this->getProperty($name);
     }
 
     /**
@@ -346,7 +373,7 @@ class ClassTemplate extends AbstractStructureTemplate
             $output = sprintf('%s%s', $output, (string)$property);
         }
 
-        foreach($this->getMethods() as $method)
+        foreach($this->getFunctions() as $method)
         {
             $output = sprintf('%s%s', $output, (string)$method);
         }

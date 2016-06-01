@@ -292,7 +292,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsVariable
      */
     public function testCanCompileAsVariable()
@@ -324,7 +324,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileAsClassProperty
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_buildDocBloc
      */
     public function testCanCompileAsClassProperty()
     {
@@ -454,7 +454,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $variable = new VariableTemplate('testvar');
         $this->assertEquals('$testvar', $variable->compile(array(
-            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_METHOD
+            CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PARAMETER
         )));
     }
 
@@ -491,7 +491,7 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_compileClassPropertyDocBlockComment
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::_buildDocBloc
      */
     public function testCanManuallyDefineVarDocBlockLine()
     {
