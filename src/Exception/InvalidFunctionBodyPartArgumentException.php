@@ -17,10 +17,10 @@
  */
 
 /**
- * Class InvalidFunctionBodyLineArgumentException
+ * Class InvalidFunctionBodyPartArgumentException
  * @package DCarbone\PHPClassBuilder\Exception
  */
-class InvalidFunctionBodyLineArgumentException extends \InvalidArgumentException
+class InvalidFunctionBodyPartArgumentException extends \InvalidArgumentException
 {
 
 }

@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate;
 use DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate;
@@ -308,5 +309,99 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
         $func = new FunctionTemplate();
         $func->setReturnStatement('$varname');
         $this->assertEquals('$varname', $func->getReturnStatement());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getBodyParts
+     * @depends testCanConstructWithoutArguments
+     */
+    public function testFunctionBodyEmptyOnConstruct()
+    {
+        $func = new FunctionTemplate();
+        $parts = $func->getBodyParts();
+        $this->assertInternalType('array', $parts);
+        $this->assertCount(0, $parts);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::addBodyPart
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getBodyParts
+     * @depends testFunctionBodyEmptyOnConstruct
+     */
+    public function testCanAddBodyPart()
+    {
+        $func = new FunctionTemplate();
+        $func->addBodyPart('$hello = \'hello\';');
+        $parts = $func->getBodyParts();
+        $this->assertCount(1, $parts);
+        $this->assertContains('$hello = \'hello\';', $parts);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::addBodyPart
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getBodyParts
+     * @depends testFunctionBodyEmptyOnConstruct
+     */
+    public function testCanAddMultilineBodyPart()
+    {
+        $func = new FunctionTemplate();
+        $func->addBodyPart("\$hello = 'hello';\n\$world = 'world';");
+        $parts = $func->getBodyParts();
+        $this->assertCount(1, $parts);
+        $this->assertContains("\$hello = 'hello';\n\$world = 'world';", $parts);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::addBodyPart
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::setBodyParts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getBodyParts
+     * @depends testFunctionBodyEmptyOnConstruct
+     */
+    public function testCanOverwriteBody()
+    {
+        $func = new FunctionTemplate();
+        $func->addBodyPart('$hello = \'hello\';');
+        $parts = $func->getBodyParts();
+        $this->assertCount(1, $parts);
+        $func->setBodyParts(array('$world = \'world\';'));
+        $parts = $func->getBodyParts();
+        $this->assertCount(1, $parts);
+        $this->assertContains('$world = \'world\';', $parts);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getDefaultCompileOpts
+     */
+    public function testHasCorrectDefaultCompileOpts()
+    {
+        $func = new FunctionTemplate();
+        $defOpts = $func->getDefaultCompileOpts();
+        $this->assertInternalType('array', $defOpts);
+        $this->assertCount(3, $defOpts);
+        $this->assertEquals(array(
+            CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_FUNCTION,
+            CompileOpt::LEADING_SPACES => 0,
+            CompileOpt::INC_COMMENT => true
+        ), $defOpts);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     */
+    public function testCanCompileAsBareFunction()
+    {
+        $func = new FunctionTemplate('test');
+        $func->addBodyPart('$hello = \'hello\';');
+        $func->setReturnStatement('$hello');
+        $func->setReturnValueType('string');
+        $output = $func->compile();
+        $this->assertEquals(
+            "/**\n * @return string\n */\nfunction test()\n{\n    \$hello = 'hello';\n    return \$hello;\n\n}\n\n",
+            $output);
     }
 }

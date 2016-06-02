@@ -22,7 +22,7 @@ use DCarbone\PHPClassBuilder\Exception\InvalidClassNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
-use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyLineArgumentException;
+use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
@@ -212,11 +212,11 @@ abstract class AbstractTemplate
 
     /**
      * @param mixed $line
-     * @return InvalidFunctionBodyLineArgumentException
+     * @return InvalidFunctionBodyPartArgumentException
      */
-    protected function createInvalidFunctionBodyLineArgumentExcception($line)
+    protected function createInvalidFunctionBodyPartArgumentException($line)
     {
-        return new InvalidFunctionBodyLineArgumentException(sprintf(
+        return new InvalidFunctionBodyPartArgumentException(sprintf(
             '%s - Function body lines must be strings, %s seen.',
             get_class($this),
             $this->_determineExceptionValueOutput($line)
@@ -231,10 +231,12 @@ abstract class AbstractTemplate
     {
         switch(gettype($value))
         {
-            case 'integer':
-            case 'double':
             case 'string':
                 return $value;
+
+            case 'integer':
+            case 'double':
+                return (string)$value;
 
             case 'boolean':
                 return $value ? '(boolean)TRUE' : '(boolean)FALSE';

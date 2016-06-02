@@ -40,7 +40,7 @@ class FunctionTemplate extends AbstractStructureTemplate
     /** @var VariableTemplate[] */
     private $_parameters = array();
     /** @var string[] */
-    private $_lines = array();
+    private $_bodyParts = array();
     /** @var null|string */
     private $_returnValueType = null;
     /** @var null|string */
@@ -191,33 +191,33 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @return string[]
      */
-    public function getLines()
+    public function getBodyParts()
     {
-        return $this->_lines;
+        return $this->_bodyParts;
     }
 
     /**
      * @param string[] $body
      */
-    public function setLines(array $body)
+    public function setBodyParts(array $body)
     {
-        $this->_lines = array();
+        $this->_bodyParts = array();
         foreach($body as $line)
         {
-            $this->addLine($line);
+            $this->addBodyPart($line);
         }
     }
 
     /**
-     * @param string $line
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyLineArgumentException
+     * @param string $part
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException
      */
-    public function addLine($line)
+    public function addBodyPart($part)
     {
-        if (!is_string($line))
-            throw $this->createInvalidFunctionBodyLineArgumentExcception($line);
+        if (!is_string($part))
+            throw $this->createInvalidFunctionBodyPartArgumentException($part);
             
-        $this->_lines[] = $line;
+        $this->_bodyParts[] = $part;
     }
 
     /**
@@ -282,7 +282,7 @@ class FunctionTemplate extends AbstractStructureTemplate
     {
         static $_defaults = array(
             CompileOpt::COMPILE_TYPE => self::COMPILETYPE_FUNCTION,
-            CompileOpt::LEADING_SPACES => 8,
+            CompileOpt::LEADING_SPACES => 0,
             CompileOpt::INC_COMMENT => true
         );
 
@@ -435,9 +435,9 @@ class FunctionTemplate extends AbstractStructureTemplate
      */
     private function _buildBody($leadingSpaces)
     {
-        $spaces = $leadingSpaces + 4;
+        $spaces = str_repeat(' ', $leadingSpaces + 4);
         $output = '';
-        foreach($this->getLines() as $line)
+        foreach($this->getBodyParts() as $line)
         {
             $output = sprintf("%s%s%s\n", $output, $spaces, $line);
         }
