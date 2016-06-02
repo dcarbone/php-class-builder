@@ -279,6 +279,7 @@ class VariableTemplate extends AbstractStructureTemplate
     /**
      * @param array $opts
      * @return array
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     protected function parseCompileOpts(array $opts)
     {

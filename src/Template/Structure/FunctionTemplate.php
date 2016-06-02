@@ -40,7 +40,7 @@ class FunctionTemplate extends AbstractStructureTemplate
     /** @var VariableTemplate[] */
     private $_parameters = array();
     /** @var string[] */
-    private $_body = array();
+    private $_lines = array();
     /** @var null|string */
     private $_returnValueType = null;
     /** @var null|string */
@@ -114,6 +114,7 @@ class FunctionTemplate extends AbstractStructureTemplate
 
     /**
      * @param VariableTemplate $parameter
+     * @throws \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
     public function addParameter(VariableTemplate $parameter)
     {
@@ -190,29 +191,33 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @return string[]
      */
-    public function getBody()
+    public function getLines()
     {
-        return $this->_body;
+        return $this->_lines;
     }
 
     /**
      * @param string[] $body
      */
-    public function setBody($body)
+    public function setLines(array $body)
     {
-        $this->_body = $body;
+        $this->_lines = array();
+        foreach($body as $line)
+        {
+            $this->addLine($line);
+        }
     }
 
     /**
      * @param string $line
      * @throws \DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyLineArgumentException
      */
-    public function addLineToBody($line)
+    public function addLine($line)
     {
         if (!is_string($line))
             throw $this->createInvalidFunctionBodyLineArgumentExcception($line);
             
-        $this->_body[] = $line;
+        $this->_lines[] = $line;
     }
 
     /**
@@ -287,6 +292,7 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @param array $opts
      * @return array
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     protected function parseCompileOpts(array $opts)
     {
@@ -431,7 +437,7 @@ class FunctionTemplate extends AbstractStructureTemplate
     {
         $spaces = $leadingSpaces + 4;
         $output = '';
-        foreach($this->getBody() as $line)
+        foreach($this->getLines() as $line)
         {
             $output = sprintf("%s%s%s\n", $output, $spaces, $line);
         }

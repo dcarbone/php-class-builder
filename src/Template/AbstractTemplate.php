@@ -46,6 +46,7 @@ abstract class AbstractTemplate
     /**
      * @param array $opts
      * @return array
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
     abstract protected function parseCompileOpts(array $opts);
 

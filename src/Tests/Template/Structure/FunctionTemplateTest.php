@@ -42,7 +42,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanConstructWithoutArguments
      * @param FunctionTemplate $func
      */
-    function testFunctionHasDefaultScopeOfPublic(FunctionTemplate $func)
+    public function testFunctionHasDefaultScopeOfPublic(FunctionTemplate $func)
     {
         $this->assertEquals(ScopeEnum::_PUBLIC, $func->getScope());
     }
@@ -53,7 +53,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanConstructWithoutArguments
      * @param FunctionTemplate $func
      */
-    function testFunctionNotStaticByDefault(FunctionTemplate $func)
+    public function testFunctionNotStaticByDefault(FunctionTemplate $func)
     {
         $this->assertFalse($func->isStatic());
     }
@@ -64,7 +64,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanConstructWithoutArguments
      * @param FunctionTemplate $func
      */
-    function testFunctionNotAbstractByDefault(FunctionTemplate $func)
+    public function testFunctionNotAbstractByDefault(FunctionTemplate $func)
     {
         $this->assertFalse($func->isAbstract());
     }
@@ -91,7 +91,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanConstructWithName
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      */
-    function testExceptionThrownWhenConstructingWithInvalidStringName()
+    public function testExceptionThrownWhenConstructingWithInvalidStringName()
     {
         new FunctionTemplate('1-2-iloveyou');
     }
@@ -103,7 +103,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanConstructWithName
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      */
-    function testExceptionThrownWhenConstructingWithNonStringName()
+    public function testExceptionThrownWhenConstructingWithNonStringName()
     {
         new FunctionTemplate(array());
     }
@@ -112,7 +112,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getScope
      */
-    function testCanConstructWithCustomScope()
+    public function testCanConstructWithCustomScope()
     {
         $func = new FunctionTemplate(null, new ScopeEnum(ScopeEnum::_PROTECTED));
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\FunctionTemplate', $func);
@@ -123,7 +123,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::isStatic
      */
-    function testCanConstructAsStatic()
+    public function testCanConstructAsStatic()
     {
         $func = new FunctionTemplate(null, new ScopeEnum(ScopeEnum::_PUBLIC), true);
         $this->assertTrue($func->isStatic());
@@ -133,7 +133,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::isAbstract
      */
-    function testCanConstructAsAbstract()
+    public function testCanConstructAsAbstract()
     {
         $func = new FunctionTemplate(null, new ScopeEnum(ScopeEnum::_PUBLIC), false, true);
         $this->assertTrue($func->isAbstract());
@@ -145,7 +145,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidFunctionName
      * @depends testCanConstructWithoutArguments
      */
-    function testCanSetNamePostConstruct()
+    public function testCanSetNamePostConstruct()
     {
         $func = new FunctionTemplate();
         $func->setName('test');
@@ -158,7 +158,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      * @depends testCanSetNamePostConstruct
      */
-    function testExceptionThrownWhenSettingInvalidNameString()
+    public function testExceptionThrownWhenSettingInvalidNameString()
     {
         $func = new FunctionTemplate();
         $func->setName('1234iloveyoumore');
@@ -170,7 +170,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      * @depends testCanSetNamePostConstruct
      */
-    function testExceptionThrownWhenSettingNonStringName()
+    public function testExceptionThrownWhenSettingNonStringName()
     {
         $func = new FunctionTemplate();
         $func->setName(array());
@@ -181,7 +181,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getScope
      * @depends testCanConstructWithoutArguments
      */
-    function testCanSetScopePostConstruct()
+    public function testCanSetScopePostConstruct()
     {
         $func = new FunctionTemplate();
         $func->setScope(new ScopeEnum(ScopeEnum::_PRIVATE));
@@ -193,7 +193,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::isStatic
      * @depends testCanConstructWithoutArguments
      */
-    function testCanSetAsStaticPostConstruct()
+    public function testCanSetAsStaticPostConstruct()
     {
         $func = new FunctionTemplate();
         $func->setStatic(true);
@@ -205,7 +205,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::isAbstract
      * @depends testCanConstructWithoutArguments
      */
-    function testCanSetAsAbstractPostConstruct()
+    public function testCanSetAsAbstractPostConstruct()
     {
         $func = new FunctionTemplate();
         $func->setAbstract(true);
@@ -217,7 +217,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getParameters
      * @depends testCanConstructWithoutArguments
      */
-    function testConstructsWithoutParameters()
+    public function testConstructsWithoutParameters()
     {
         $func = new FunctionTemplate();
         $this->assertCount(0, $func->getParameters());
@@ -230,7 +230,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getParameter
      * @depends testCanConstructWithoutArguments
      */
-    function testCanAddParameterWithValidName()
+    public function testCanAddParameterWithValidName()
     {
         $func = new FunctionTemplate();
         $var = new VariableTemplate('test');
@@ -244,7 +244,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getParameter
      * @depends testConstructsWithoutParameters
      */
-    function testGettingInvalidParameterReturnsNull()
+    public function testGettingInvalidParameterReturnsNull()
     {
         $func = new FunctionTemplate();
         $this->assertNull($func->getParameter('idonotexist'));
@@ -255,7 +255,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @depends testCanAddParameterWithValidName
      * @expectedException \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
-    function testExceptionThrownWhenAddingParameterWithoutName()
+    public function testExceptionThrownWhenAddingParameterWithoutName()
     {
         $func = new FunctionTemplate();
         $func->addParameter(new VariableTemplate());
@@ -267,11 +267,46 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getParameter
      * @depends testCanAddParameterWithValidName
      */
-    function testCanCreateParameter()
+    public function testCanCreateParameter()
     {
         $func = new FunctionTemplate();
         $var = $func->createParameter('test');
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\VariableTemplate', $var);
         $this->assertSame($var, $func->getParameter('test'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::createParameter
+     * @depends testCanCreateParameter
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException
+     */
+    public function testExceptionThrownWhenCreatingParameterWithInvalidNameString()
+    {
+        $func = new FunctionTemplate();
+        $func->createParameter('-123doesnotloveme');
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::setReturnValueType
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getReturnValueType
+     * @depends testCanConstructWithoutArguments
+     */
+    public function testCanSetReturnValueType()
+    {
+        $func = new FunctionTemplate();
+        $func->setReturnValueType('array');
+        $this->assertEquals('array', $func->getReturnValueType());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::setReturnStatement
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getReturnStatement
+     * @depends testCanConstructWithoutArguments
+     */
+    public function testCanSetReturnStatement()
+    {
+        $func = new FunctionTemplate();
+        $func->setReturnStatement('$varname');
+        $this->assertEquals('$varname', $func->getReturnStatement());
     }
 }

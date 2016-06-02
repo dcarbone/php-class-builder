@@ -42,7 +42,8 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     }
 
     /**
-     * @param string $line
+     * @param string|bool|int|double|null $line
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException
      */
     public function addLine($line = '')
     {
