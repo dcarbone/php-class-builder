@@ -27,6 +27,12 @@ use DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate;
  */
 class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
 {
+    protected static function generateTestFunctionName()
+    {
+        static $i = 0;
+        return sprintf('_class_builder_function_test_%d', $i++);
+    }
+
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::__construct
      * @return FunctionTemplate
@@ -371,6 +377,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::getDefaultCompileOpts
+     * @depends testCanConstructWithoutArguments
      */
     public function testHasCorrectDefaultCompileOpts()
     {
@@ -392,16 +399,72 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testHasCorrectDefaultCompileOpts
      */
     public function testCanCompileAsBareFunction()
     {
-        $func = new FunctionTemplate('test');
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
         $func->addBodyPart('$hello = \'hello\';');
         $func->setReturnStatement('$hello');
         $func->setReturnValueType('string');
         $output = $func->compile();
-        $this->assertEquals(
-            "/**\n * @return string\n */\nfunction test()\n{\n    \$hello = 'hello';\n    return \$hello;\n\n}\n\n",
+        $this->assertEquals(<<<STRING
+/**
+ * @return string
+ */
+function {$funcName}()
+{
+    \$hello = 'hello';
+    return \$hello;
+
+}
+
+
+STRING
+            ,
             $output);
+        $this->assertEquals('hello', eval(sprintf('%sreturn %s();', $output, $funcName)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanCompileAsBareFunctionWithParameters()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('$hello = \'hello\';');
+        $param = $func->createParameter('world');
+        $param->setDefaultValueStatement('\'world\'');
+        $param->setPHPType('string');
+        $func->addBodyPart('$return = sprintf(\'%s %s\', $hello, $world);');
+        $func->setReturnStatement('$return');
+        $func->setReturnValueType('string');
+        $output = $func->compile();
+        $this->assertEquals(<<<STRING
+/**
+ * @param string \$world
+ * @return string
+ */
+function {$funcName}(\$world = 'world')
+{
+    \$hello = 'hello';
+    \$return = sprintf('%s %s', \$hello, \$world);
+    return \$return;
+
+}
+
+
+STRING
+            ,
+            $output);
+        $this->assertEquals('hello world', eval(sprintf('%sreturn %s();', $output, $funcName)));
     }
 }

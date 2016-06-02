@@ -365,7 +365,7 @@ class FunctionTemplate extends AbstractStructureTemplate
             $output = $spaces;
         }
 
-        $output = sprintf(
+        return sprintf(
             "%sfunction %s(%s)\n%s{\n%s\n%s}\n\n",
             $output,
             $this->getName(),
@@ -374,13 +374,47 @@ class FunctionTemplate extends AbstractStructureTemplate
             $this->_buildBody($leadingSpaces),
             $spaces
         );
-
-        return $output;
     }
 
+    /**
+     * @param int $leadingSpaces
+     * @param bool $includeComment
+     * @return string
+     */
     private function _compileAsClassMethod($leadingSpaces, $includeComment)
     {
+        $spaces = str_repeat(' ', $leadingSpaces);
 
+        if ($includeComment)
+        {
+            $output = sprintf(
+                '%s%s',
+                $this->_buildDocBloc()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
+                $spaces
+            );
+        }
+        else
+        {
+            $output = $spaces;
+        }
+
+       if ($this->isAbstract())
+            return sprintf('%sabstract %s function %s(%s);', $output, $this->getScope(), $this->getName(), $this->_buildParameters());
+
+        $output = sprintf('%s%s ', $output, $this->getScope());
+
+        if ($this->isStatic())
+            $output = sprintf('%sstatic ', $output);
+
+        return sprintf(
+            "%sfunction %s(%s)\n%s{\n%s\n%s}\n\n",
+            $output,
+            $this->getName(),
+            $this->_buildParameters(),
+            $spaces,
+            $this->_buildBody($leadingSpaces),
+            $spaces
+        );
     }
 
     /**
@@ -392,22 +426,26 @@ class FunctionTemplate extends AbstractStructureTemplate
 
         $addReturn = true;
 
-        foreach($comment->getLines() as $line)
+        foreach($this->getParameters() as $name=>$parameter)
         {
-            if (preg_match('{@param}S', $line))
+            $addParam = true;
+            foreach($comment->getLines() as $line)
             {
-                foreach($this->getParameters() as $name=>$parameter)
+                if (preg_match(sprintf('{@param.+\$%s}S', $parameter->getName()), $line))
                 {
-                    if (preg_match(sprintf('{@param.+\$%s}S', $parameter->getName()), $line))
-                        continue;
-
-                    $comment->addLine($parameter->getMethodParameterAnnotation());
+                    $addParam = false;
+                    break;
                 }
             }
-            else if (preg_match('{@return}S', $line))
-            {
+
+            if ($addParam)
+                $comment->addLine($parameter->getMethodParameterAnnotation());
+        }
+
+        foreach($comment->getLines() as $line)
+        {
+            if (preg_match('{@return}S', $line))
                 $addReturn = false;
-            }
         }
 
         if ($addReturn && null !== ($retType = $this->getReturnValueType()))
