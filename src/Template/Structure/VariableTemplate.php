@@ -225,7 +225,7 @@ class VariableTemplate extends AbstractStructureTemplate
     /**
      * @return string
      */
-    public function getMethodParameterAnnotation()
+    public function getFunctionParameterAnnotation()
     {
         return sprintf(
             '@param %s $%s%s',
@@ -241,6 +241,9 @@ class VariableTemplate extends AbstractStructureTemplate
      */
     public function compile(array $opts = array())
     {
+        if (false === NameUtils::isValidVariableName($this->getName()))
+            throw $this->createMissingNameException('Variable name not defined at compile time');
+        
         list(
             $type,
             $includeComment,
@@ -286,6 +289,13 @@ class VariableTemplate extends AbstractStructureTemplate
         $opts = $opts + $this->getDefaultCompileOpts();
 
         $compiled = array();
+
+        if (!is_int($opts[CompileOpt::COMPILE_TYPE]))
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::COMPILE_TYPE',
+                'VariableTemplate::COMPILETYPE_VARIABLE, VariableTemplate::COMPILETYPE_METHOD, VariableTemplate::COMPILETYPE_PROPERTY',
+                $opts[CompileOpt::COMPILE_TYPE]
+            );
 
         switch($opts[CompileOpt::COMPILE_TYPE])
         {

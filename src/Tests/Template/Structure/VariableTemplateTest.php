@@ -264,14 +264,17 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getMethodParameterAnnotation
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getFunctionParameterAnnotation
      */
     public function testCanGetVariableMethodParameterAnnotation()
     {
         $variable = new VariableTemplate('testvar');
-        $this->assertEquals('@param mixed $testvar', $variable->getMethodParameterAnnotation());
+        $this->assertEquals('@param mixed $testvar', $variable->getFunctionParameterAnnotation());
     }
-    
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::getDefaultCompileOpts
+     */
     public function testCanGetDefaultCompileOpts()
     {
         $variable = new VariableTemplate('testvar');
@@ -303,6 +306,17 @@ class VariableTemplateTest extends \PHPUnit_Framework_TestCase
             "        /**\n         * @var mixed\n         */\n        \$testvar;\n",
             $variable->compile()
         );
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate::compile
+     * @depends testCanCompileAsVariable
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\MissingNameException
+     */
+    public function testExceptionThrownWhenCompilingWithoutSettingName()
+    {
+        $variable = new VariableTemplate();
+        $variable->compile();
     }
 
     /**

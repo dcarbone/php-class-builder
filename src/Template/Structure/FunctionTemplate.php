@@ -255,9 +255,13 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @param array $opts
      * @return string
+     * @throws \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
     public function compile(array $opts = array())
     {
+        if (false === NameUtils::isValidFunctionName($this->getName()))
+            throw $this->createMissingNameException('Function name not defined at compile time');
+
         list(
             $type,
             $leadingSpaces,
@@ -300,15 +304,22 @@ class FunctionTemplate extends AbstractStructureTemplate
 
         $compiled = array();
 
+        if (!is_int($opts[CompileOpt::COMPILE_TYPE]))
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::COMPILE_TYPE',
+                'FunctionTemplate::COMPILETYPE_CLASSMETHOD or FunctionTemplate::COMPILETYPE_FUNCTION',
+                $opts[CompileOpt::COMPILE_TYPE]);
+
         switch($opts[CompileOpt::COMPILE_TYPE])
         {
             case self::COMPILETYPE_FUNCTION:
             case self::COMPILETYPE_CLASSMETHOD:
                 $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
                 break;
+
             default:
                 throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::COMPILETYPE',
+                    'CompileOpt::COMPILE_TYPE',
                     'FunctionTemplate::COMPILETYPE_CLASSMETHOD or FunctionTemplate::COMPILETYPE_FUNCTION',
                     $opts[CompileOpt::COMPILE_TYPE]
                 );
@@ -398,7 +409,7 @@ class FunctionTemplate extends AbstractStructureTemplate
             $output = $spaces;
         }
 
-       if ($this->isAbstract())
+        if ($this->isAbstract())
             return sprintf('%sabstract %s function %s(%s);', $output, $this->getScope(), $this->getName(), $this->_buildParameters());
 
         $output = sprintf('%s%s ', $output, $this->getScope());
@@ -439,7 +450,7 @@ class FunctionTemplate extends AbstractStructureTemplate
             }
 
             if ($addParam)
-                $comment->addLine($parameter->getMethodParameterAnnotation());
+                $comment->addLine($parameter->getFunctionParameterAnnotation());
         }
 
         foreach($comment->getLines() as $line)

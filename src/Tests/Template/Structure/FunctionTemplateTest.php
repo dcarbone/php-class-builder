@@ -394,6 +394,7 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
@@ -429,6 +430,7 @@ STRING
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
@@ -466,5 +468,162 @@ STRING
             ,
             $output);
         $this->assertEquals('hello world', eval(sprintf('%sreturn %s();', $output, $funcName)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanCompileAsBareFunctionWithoutComment()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('$hello = \'hello\';');
+        $func->setReturnStatement('$hello');
+        $func->setReturnValueType('string');
+        $output = $func->compile(array(CompileOpt::INC_COMMENT => false));
+        $this->assertEquals(<<<STRING
+function {$funcName}()
+{
+    \$hello = 'hello';
+    return \$hello;
+
+}
+
+
+STRING
+            ,
+            $output);
+        $this->assertEquals('hello', eval(sprintf('%sreturn %s();', $output, $funcName)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanCompileAsBareFunctionWithPrecedingSpaces()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('$hello = \'hello\';');
+        $func->setReturnStatement('$hello');
+        $func->setReturnValueType('string');
+        $output = $func->compile(array(CompileOpt::LEADING_SPACES => 4));
+        $this->assertEquals(<<<STRING
+    /**
+     * @return string
+     */
+    function {$funcName}()
+    {
+        \$hello = 'hello';
+        return \$hello;
+
+    }
+
+
+STRING
+            ,
+            $output);
+        $this->assertEquals('hello', eval(sprintf('%sreturn %s();', $output, $funcName)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanAddCustomParamCommentAnnotation()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('$hello = \'hello\';');
+        $param = $func->createParameter('world');
+        $param->setDefaultValueStatement('\'world\'');
+        $param->setPHPType('string');
+        $func->addBodyPart('$return = sprintf(\'%s %s\', $hello, $world);');
+        $func->setReturnStatement('$return');
+        $func->setReturnValueType('string');
+        $func->getDocBlockComment()->addLine('@param string $world I would give...');
+        $output = $func->compile();
+        $this->assertEquals(<<<STRING
+/**
+ * @param string \$world I would give...
+ * @return string
+ */
+function {$funcName}(\$world = 'world')
+{
+    \$hello = 'hello';
+    \$return = sprintf('%s %s', \$hello, \$world);
+    return \$return;
+
+}
+
+
+STRING
+            ,
+            $output);
+        $this->assertEquals('hello world', eval(sprintf('%sreturn %s();', $output, $funcName)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @depends testCanCompileAsBareFunction
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\MissingNameException
+     */
+    public function testExceptionThrownWhenCompilingWithoutSettingName()
+    {
+        $func = new FunctionTemplate();
+        $func->compile();
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @depends testCanCompileAsBareFunction
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     */
+    public function testExceptionThrownWhenCompilingWithInvalidIncludeCommentValue()
+    {
+        $func = new FunctionTemplate('asdf');
+        $func->compile(array(CompileOpt::INC_COMMENT => 'sandwiches'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @depends testCanCompileAsBareFunction
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     */
+    public function testExceptionThrownWhenCompilingWithInvalidLeadingSpacesValue()
+    {
+        $func = new FunctionTemplate('asdfw');
+        $func->compile(array(CompileOpt::LEADING_SPACES => 'sehciwdnas'));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @depends testCanCompileAsBareFunction
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     */
+    public function testExceptionThrownWhenCompilingWithInvalidCompileType()
+    {
+        $func = new FunctionTemplate('asfasf');
+        $func->compile(array(CompileOpt::COMPILE_TYPE => 'noooooooope'));
     }
 }
