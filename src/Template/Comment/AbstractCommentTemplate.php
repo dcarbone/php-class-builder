@@ -33,7 +33,7 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     /**
      * Constructor
      *
-     * @param string $text
+     * @param mixed $text
      */
     public function __construct($text = null)
     {
@@ -47,33 +47,34 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      */
     public function addLine($line = '')
     {
-        if (null === $line)
+        switch(gettype($line))
         {
-            $this->_lines[] = '';
-        }
-        else
-        {
-            switch(gettype($line))
-            {
-                case 'string':
-                    if ($this->testStringForNewlines($line))
-                        $this->addLines($this->parseStringInput($line));
-                    else
-                        $this->_lines[] = $line;
-                    break;
+            case 'NULL':
+                $this->addEmptyLine();
+                break;
 
-                case 'integer':
-                case 'double':
-                    $this->_lines[] = (string)$line;
-                    break;
+            case 'array':
+                $this->addLines($line);
+                break;
 
-                case 'boolean':
-                    $this->_lines[] = $line ? 'TRUE' : 'FALSE';
-                    break;
+            case 'string':
+                if ($this->testStringForNewlines($line))
+                    $this->addLines($this->parseStringInput($line));
+                else
+                    $this->_lines[] = $line;
+                break;
 
-                default:
-                    throw $this->createInvalidCommentLineArgumentException($line);
-            }
+            case 'integer':
+            case 'double':
+                $this->_lines[] = (string)$line;
+                break;
+
+            case 'boolean':
+                $this->_lines[] = $line ? 'TRUE' : 'FALSE';
+                break;
+
+            default:
+                throw $this->createInvalidCommentLineArgumentException($line);
         }
     }
 
@@ -173,7 +174,8 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     public function getDefaultCompileOpts()
     {
         static $_defaults = array(
-            CompileOpt::LEADING_SPACES => 4
+            CompileOpt::LEADING_SPACES => 4,
+            CompileOpt::OUTPUT_BLANK_COMMENT => false
         );
 
         return $_defaults;
@@ -248,18 +250,38 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     {
         $opts = $opts + $this->getDefaultCompileOpts();
 
+        $compiled = array();
+
         if (isset($opts[CompileOpt::LEADING_SPACES])
             && is_int($opts[CompileOpt::LEADING_SPACES])
             && $opts[CompileOpt::LEADING_SPACES] >= 0)
         {
-            return array($opts[CompileOpt::LEADING_SPACES]);
+            $compiled[] = $opts[CompileOpt::LEADING_SPACES];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::LEADING_SPACES',
+                'integer >= 0',
+                $opts[CompileOpt::LEADING_SPACES]
+            );
         }
 
-        throw $this->createInvalidCompileOptionValueException(
-            'CompileOpt::LEADING_SPACES',
-            'integer >= 0',
-            (isset($opts[CompileOpt::LEADING_SPACES]) ? $opts[CompileOpt::LEADING_SPACES] : 'UNDEFINED')
-        );
+        if (isset($opts[CompileOpt::OUTPUT_BLANK_COMMENT])
+            && is_bool($opts[CompileOpt::OUTPUT_BLANK_COMMENT]))
+        {
+            $compiled[] = $opts[CompileOpt::OUTPUT_BLANK_COMMENT];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt:OUTPUT_BLANK_COMMENT',
+                'boolean',
+                $opts[CompileOpt::OUTPUT_BLANK_COMMENT]
+            );
+        }
+
+        return $compiled;
     }
 
     /**
