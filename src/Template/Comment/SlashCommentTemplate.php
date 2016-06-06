@@ -28,7 +28,10 @@ class SlashCommentTemplate extends AbstractCommentTemplate
      */
     public function compile(array $opts = array())
     {
-        list($leadingSpaces) = $this->parseCompileOpts($opts);
+        list($leadingSpaces, $outputBlank) = $this->parseCompileOpts($opts);
+
+        if (false === $outputBlank && 0 === count($this))
+            return '';
 
         $output = '';
         $leadingSpaces = str_repeat(' ', $leadingSpaces);

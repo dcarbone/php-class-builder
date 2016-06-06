@@ -12,4 +12,5 @@ abstract class CompileOpt
     const INC_DEFAULT_VALUE = 3;
     const INC_BODY = 4;
     const IN_FILE = 5;
+    const OUTPUT_BLANK_COMMENT = 6;
 }

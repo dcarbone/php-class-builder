@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate;
 
 /**
@@ -23,28 +24,38 @@ use DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate;
  */
 class SlashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return SlashCommentTemplate
-     */
-    public function testCanConstructComment()
+    public function testCanConstructCommentWithoutText()
     {
         $comment = new SlashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SlashCommentTemplate', $comment);
-        return $comment;
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
+     */
+    public function testNoOutputWhenEmptyByDefault()
+    {
+        $comment = new SlashCommentTemplate();
+        $this->assertEmpty($comment->compile());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanGetEmptyComment()
     {
         $comment = new SlashCommentTemplate();
-        $this->assertEquals('', $comment->compile());
+        $this->assertEmpty($comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true)));
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::addLine
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanAddLine()
     {

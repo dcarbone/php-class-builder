@@ -290,28 +290,26 @@ class VariableTemplate extends AbstractStructureTemplate
 
         $compiled = array();
 
-        if (!is_int($opts[CompileOpt::COMPILE_TYPE]))
-            throw $this->createInvalidCompileOptionValueException(
-                'CompileOpt::COMPILE_TYPE',
-                'VariableTemplate::COMPILETYPE_VARIABLE, VariableTemplate::COMPILETYPE_METHOD, VariableTemplate::COMPILETYPE_PROPERTY',
-                $opts[CompileOpt::COMPILE_TYPE]
-            );
-
-        switch($opts[CompileOpt::COMPILE_TYPE])
+        if (is_int($opts[CompileOpt::COMPILE_TYPE]))
         {
-            case self::COMPILETYPE_VARIABLE:
-            case self::COMPILETYPE_PARAMETER:
-            case self::COMPILETYPE_PROPERTY:
-                $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
-                break;
-
-            default:
-                throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::COMPILE_TYPE',
-                    'VariableTemplate::COMPILETYPE_VARIABLE, VariableTemplate::COMPILETYPE_METHOD, VariableTemplate::COMPILETYPE_PROPERTY',
-                    $opts[CompileOpt::COMPILE_TYPE]
-                );
+            switch($opts[CompileOpt::COMPILE_TYPE])
+            {
+                case self::COMPILETYPE_VARIABLE:
+                case self::COMPILETYPE_PARAMETER:
+                case self::COMPILETYPE_PROPERTY:
+                    $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
+                    goto compile_type_ok;
+            }
         }
+
+        throw $this->createInvalidCompileOptionValueException(
+            'CompileOpt::COMPILE_TYPE',
+            'VariableTemplate::COMPILETYPE_VARIABLE, VariableTemplate::COMPILETYPE_METHOD, VariableTemplate::COMPILETYPE_PROPERTY',
+            $opts[CompileOpt::COMPILE_TYPE]
+        );
+
+        compile_type_ok:
+
 
         if (is_bool($opts[CompileOpt::INC_COMMENT]))
         {

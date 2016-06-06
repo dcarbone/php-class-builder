@@ -626,4 +626,32 @@ STRING
         $func = new FunctionTemplate('asfasf');
         $func->compile(array(CompileOpt::COMPILE_TYPE => 'noooooooope'));
     }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsFunction
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanCreateNonReturningFunction()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $output = $func->compile();
+        $this->assertEquals(<<<PHP
+function {$funcName}()
+{
+    echo 'woot!';
+
+}
+
+
+PHP
+            , $output);
+    }
 }

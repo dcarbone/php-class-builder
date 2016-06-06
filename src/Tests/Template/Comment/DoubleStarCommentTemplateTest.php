@@ -24,25 +24,32 @@ use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
  */
 class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return DoubleStarCommentTemplate
-     */
     public function testCanConstructCommentWithoutText()
     {
         $comment = new DoubleStarCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
-        return $comment;
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
-     * @param DoubleStarCommentTemplate $comment
      */
-    public function testCanGetEmptyComment(DoubleStarCommentTemplate $comment)
+    public function testNoOutputWhenEmptyByDefault()
     {
-        $output = $comment->compile();
+        $comment = new DoubleStarCommentTemplate();
+        $this->assertEmpty($comment->compile());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
+     */
+    public function testCanGetEmptyComment()
+    {
+        $comment = new DoubleStarCommentTemplate();
+        $output = $comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true));
         $this->assertEquals("    /**\n     */\n", $output);
     }
 
@@ -120,12 +127,12 @@ class DoubleStarCommentTemplateTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanUseBang()
     {
-        $comment = new DoubleStarCommentTemplate();
+        $comment = new DoubleStarCommentTemplate('i\'ma comment!');
         $this->assertFalse($comment->usesBang());
         $comment->setUseBang(true);
         $this->assertTrue($comment->usesBang());
         $output = $comment->compile();
-        $this->assertEquals("    /**!\n     */\n", $output);
+        $this->assertEquals("    /**!\n     * i'ma comment!\n     */\n", $output);
     }
 
     /**

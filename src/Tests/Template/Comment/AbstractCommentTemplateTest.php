@@ -332,8 +332,10 @@ class AbstractCommentTemplateTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(method_exists($stub, 'getDefaultCompileOpts'), 'AbstractCommentTemplate is missing method "getDefaultCompileOpts"');
         $opts = $stub->getDefaultCompileOpts();
         $this->assertInternalType('array', $opts);
-        $this->assertCount(1, $opts);
+        $this->assertCount(2, $opts);
         $this->assertArrayHasKey(CompileOpt::LEADING_SPACES, $opts);
+        $this->assertArrayHasKey(CompileOpt::OUTPUT_BLANK_COMMENT, $opts);
         $this->assertEquals(4, $opts[CompileOpt::LEADING_SPACES]);
+        $this->assertFalse($opts[CompileOpt::OUTPUT_BLANK_COMMENT]);
     }
 }

@@ -304,26 +304,24 @@ class FunctionTemplate extends AbstractStructureTemplate
 
         $compiled = array();
 
-        if (!is_int($opts[CompileOpt::COMPILE_TYPE]))
-            throw $this->createInvalidCompileOptionValueException(
-                'CompileOpt::COMPILE_TYPE',
-                'FunctionTemplate::COMPILETYPE_CLASSMETHOD or FunctionTemplate::COMPILETYPE_FUNCTION',
-                $opts[CompileOpt::COMPILE_TYPE]);
-
-        switch($opts[CompileOpt::COMPILE_TYPE])
+        if (is_int($opts[CompileOpt::COMPILE_TYPE]))
         {
-            case self::COMPILETYPE_FUNCTION:
-            case self::COMPILETYPE_CLASSMETHOD:
-                $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
-                break;
-
-            default:
-                throw $this->createInvalidCompileOptionValueException(
-                    'CompileOpt::COMPILE_TYPE',
-                    'FunctionTemplate::COMPILETYPE_CLASSMETHOD or FunctionTemplate::COMPILETYPE_FUNCTION',
-                    $opts[CompileOpt::COMPILE_TYPE]
-                );
+            switch($opts[CompileOpt::COMPILE_TYPE])
+            {
+                case self::COMPILETYPE_FUNCTION:
+                case self::COMPILETYPE_CLASSMETHOD:
+                    $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
+                    goto compile_type_ok;
+            }
         }
+
+        throw $this->createInvalidCompileOptionValueException(
+            'CompileOpt::COMPILE_TYPE',
+            'FunctionTemplate::COMPILETYPE_CLASSMETHOD or FunctionTemplate::COMPILETYPE_FUNCTION',
+            $opts[CompileOpt::COMPILE_TYPE]
+        );
+
+        compile_type_ok:
 
         if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0)
         {

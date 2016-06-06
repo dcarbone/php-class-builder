@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate;
 
 /**
@@ -23,20 +24,18 @@ use DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate;
  */
 class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return HashCommentTemplate
-     */
-    public function testCanConstructComment()
+    public function testCanConstructCommentWithoutText()
     {
         $comment = new HashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\HashCommentTemplate', $comment);
-        return $comment;
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetEmptyComment()
+    public function testNoOutputWhenEmptyByDefault()
     {
         $comment = new HashCommentTemplate();
         $this->assertEmpty($comment->compile());
@@ -44,6 +43,18 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
+     */
+    public function testCanGetEmptyComment()
+    {
+        $comment = new HashCommentTemplate();
+        $this->assertEmpty($comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true)));
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanAddLineToComment()
     {
@@ -55,6 +66,7 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addLines
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanAddMultipleLines()
     {
@@ -66,6 +78,7 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addEmptyLine
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanAddEmptyLine()
     {
@@ -76,6 +89,7 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::getLines
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanGetLinesArray()
     {
@@ -90,6 +104,7 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCountReturnsZeroWhenEmpty()
     {
@@ -99,6 +114,7 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
+     * @depends testCanConstructCommentWithoutText
      */
     public function testCanGetCorrectCount()
     {

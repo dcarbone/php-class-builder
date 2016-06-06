@@ -24,25 +24,32 @@ use DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate;
  */
 class SingleStarCommentTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @return SingleStarCommentTemplate
-     */
-    public function testCanConstructComment()
+    public function testCanConstructCommentWithoutText()
     {
         $comment = new SingleStarCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SingleStarCommentTemplate', $comment);
-        return $comment;
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
      * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseCompileOpts
-     * @depends testCanConstructComment
-     * @param SingleStarCommentTemplate $comment
+     * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetEmptyComment(SingleStarCommentTemplate $comment)
+    public function testNoOutputWhenEmptyByDefault()
     {
-        $output = $comment->compile();
+        $comment = new SingleStarCommentTemplate();
+        $this->assertEmpty($comment->compile());
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SingleStarCommentTemplate::parseCompileOpts
+     * @depends testCanConstructCommentWithoutText
+     */
+    public function testCanGetEmptyComment()
+    {
+        $comment = new SingleStarCommentTemplate();
+        $output = $comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true));
         $this->assertEquals("    /*\n     */\n", $output);
     }
 
@@ -103,12 +110,12 @@ class SingleStarCommentTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanUseBang()
     {
-        $comment = new SingleStarCommentTemplate();
+        $comment = new SingleStarCommentTemplate('i\'ma comment!');
         $this->assertFalse($comment->usesBang());
         $comment->setUseBang(true);
         $this->assertTrue($comment->usesBang());
         $output = $comment->compile();
-        $this->assertEquals("    /*!\n     */\n", $output);
+        $this->assertEquals("    /*!\n     * i'ma comment!\n     */\n", $output);
     }
 
     /**
