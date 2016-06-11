@@ -654,4 +654,118 @@ function {$funcName}()
 PHP
             , $output);
     }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsClassMethod
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanCompileAsClassMethod()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $output = $func->compile(array(CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_CLASSMETHOD));
+        $this->assertEquals(<<<PHP
+public function {$funcName}()
+{
+    echo 'woot!';
+
+}
+
+
+PHP
+            , $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsClassMethod
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsClassMethod
+     */
+    public function testCanCompileAsAbstractClassMethod()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $func->setAbstract(true);
+        $output = $func->compile(array(CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_CLASSMETHOD));
+        $this->assertEquals(<<<PHP
+abstract public function {$funcName}();
+
+
+PHP
+            , $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsClassMethod
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsClassMethod
+     */
+    public function testCanCompileAsStaticMethod()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $func->setStatic(true);
+        $output = $func->compile(array(CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_CLASSMETHOD));
+        $this->assertEquals(<<<PHP
+static public function {$funcName}()
+{
+    echo 'woot!';
+
+}
+
+
+PHP
+            , $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileAsClassMethod
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
+     * @depends testCanCompileAsClassMethod
+     */
+    public function testCanCompileAsClassMethodWithAppropriateDefaultSpacing()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $output = $func->compile(array(
+            CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_CLASSMETHOD,
+            CompileOpt::LEADING_SPACES => 4,
+            CompileOpt::INC_COMMENT => false,
+        ));
+        $this->assertEquals(<<<PHP
+    public function {$funcName}()
+    {
+        echo 'woot!';
+
+    }
+
+
+PHP
+            , $output);
+    }
 }

@@ -408,12 +408,12 @@ class FunctionTemplate extends AbstractStructureTemplate
         }
 
         if ($this->isAbstract())
-            return sprintf('%sabstract %s function %s(%s);', $output, $this->getScope(), $this->getName(), $this->_buildParameters());
-
-        $output = sprintf('%s%s ', $output, $this->getScope());
+            return sprintf("%sabstract %s function %s(%s);\n\n", $output, $this->getScope(), $this->getName(), $this->_buildParameters());
 
         if ($this->isStatic())
             $output = sprintf('%sstatic ', $output);
+
+        $output = sprintf('%s%s ', $output, $this->getScope());
 
         return sprintf(
             "%sfunction %s(%s)\n%s{\n%s\n%s}\n\n",
