@@ -265,14 +265,15 @@ class FunctionTemplate extends AbstractStructureTemplate
         list(
             $type,
             $leadingSpaces,
-            $includeComment) = $this->parseCompileOpts($opts);
+            $includeComment,
+            $incBody) = $this->parseCompileOpts($opts);
 
         switch($type)
         {
             case self::COMPILETYPE_FUNCTION:
-                return $this->_compileAsFunction($leadingSpaces, $includeComment);
+                return $this->_compileAsFunction($leadingSpaces, $includeComment, $incBody);
             case self::COMPILETYPE_CLASSMETHOD:
-                return $this->_compileAsClassMethod($leadingSpaces, $includeComment);
+                return $this->_compileAsClassMethod($leadingSpaces, $includeComment, $incBody);
 
             // TODO: Should not be reachable, but do something?
             default: return '';
@@ -287,7 +288,8 @@ class FunctionTemplate extends AbstractStructureTemplate
         static $_defaults = array(
             CompileOpt::COMPILE_TYPE => self::COMPILETYPE_FUNCTION,
             CompileOpt::LEADING_SPACES => 0,
-            CompileOpt::INC_COMMENT => true
+            CompileOpt::INC_COMMENT => true,
+            CompileOpt::INC_BODY => true,
         );
 
         return $_defaults;
@@ -349,15 +351,29 @@ class FunctionTemplate extends AbstractStructureTemplate
             );
         }
 
+        if (is_bool($opts[CompileOpt::INC_BODY]))
+        {
+            $compiled[] = $opts[CompileOpt::INC_BODY];
+        }
+        else
+        {
+            throw $this->createInvalidCompileOptionValueException(
+                'CompileOpt::INC_BODY',
+                'Boolean value (defaults to TRUE)',
+                $opts[CompileOpt::INC_BODY]
+            );
+        }
+
         return $compiled;
     }
 
     /**
      * @param int $leadingSpaces
      * @param bool $includeComment
+     * @param bool $incBody
      * @return string
      */
-    private function _compileAsFunction($leadingSpaces, $includeComment)
+    private function _compileAsFunction($leadingSpaces, $includeComment, $incBody)
     {
         $spaces = str_repeat(' ', $leadingSpaces);
 
@@ -375,13 +391,11 @@ class FunctionTemplate extends AbstractStructureTemplate
         }
 
         return sprintf(
-            "%sfunction %s(%s)\n%s{\n%s\n%s}\n\n",
+            "%sfunction %s(%s)%s\n\n",
             $output,
             $this->getName(),
             $this->_buildParameters(),
-            $spaces,
-            $this->_buildBody($leadingSpaces),
-            $spaces
+            $this->_compileBody($leadingSpaces, $spaces, $incBody)
         );
     }
 
@@ -390,7 +404,7 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param bool $includeComment
      * @return string
      */
-    private function _compileAsClassMethod($leadingSpaces, $includeComment)
+    private function _compileAsClassMethod($leadingSpaces, $includeComment, $incBody)
     {
         $spaces = str_repeat(' ', $leadingSpaces);
 
@@ -416,14 +430,33 @@ class FunctionTemplate extends AbstractStructureTemplate
         $output = sprintf('%s%s ', $output, $this->getScope());
 
         return sprintf(
-            "%sfunction %s(%s)\n%s{\n%s\n%s}\n\n",
+            "%sfunction %s(%s)%s\n\n",
             $output,
             $this->getName(),
             $this->_buildParameters(),
-            $spaces,
-            $this->_buildBody($leadingSpaces),
-            $spaces
+            $this->_compileBody($leadingSpaces, $spaces, $incBody)
         );
+    }
+
+    /**
+     * @param int $leadingSpaces
+     * @param string $spaces
+     * @param bool $incBody
+     * @return string
+     */
+    private function _compileBody($leadingSpaces, $spaces, $incBody)
+    {
+        if ($incBody)
+        {
+            return sprintf(
+                "\n%s{\n%s\n%s}",
+                $spaces,
+                $this->_buildBody($leadingSpaces),
+                $spaces
+            );
+        }
+
+        return ';';
     }
 
     /**

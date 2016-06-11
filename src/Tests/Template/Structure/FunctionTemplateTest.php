@@ -384,11 +384,12 @@ class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
         $func = new FunctionTemplate();
         $defOpts = $func->getDefaultCompileOpts();
         $this->assertInternalType('array', $defOpts);
-        $this->assertCount(3, $defOpts);
+        $this->assertCount(4, $defOpts);
         $this->assertEquals(array(
             CompileOpt::COMPILE_TYPE => FunctionTemplate::COMPILETYPE_FUNCTION,
             CompileOpt::LEADING_SPACES => 0,
-            CompileOpt::INC_COMMENT => true
+            CompileOpt::INC_COMMENT => true,
+            CompileOpt::INC_BODY => true
         ), $defOpts);
     }
 

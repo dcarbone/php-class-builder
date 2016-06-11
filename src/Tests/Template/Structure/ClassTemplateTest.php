@@ -25,13 +25,11 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::__construct
-     * @return \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate
      */
     public function testCanConstructWithoutArguments()
     {
         $class = new ClassTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\ClassTemplate', $class);
-        return $class;
     }
 
     /**
@@ -43,22 +41,23 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getInterfaces
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getFunctions
      * @depends testCanConstructWithoutArguments
-     * @param ClassTemplate $classTemplate
      */
-    public function testDefaultValues(ClassTemplate $classTemplate)
+    public function testDefaultValues()
     {
-        $this->assertNull($classTemplate->getName());
-        $this->assertNull($classTemplate->getNamespace());
-        $this->assertNull($classTemplate->getParent());
-        $this->assertEmpty($classTemplate->getProperties());
-        $this->assertFalse($classTemplate->isAbstract());
-        $this->assertEmpty($classTemplate->getInterfaces());
-        $this->assertEmpty($classTemplate->getFunctions());
+        $class = new ClassTemplate();
+        $this->assertNull($class->getName());
+        $this->assertNull($class->getNamespace());
+        $this->assertNull($class->getParent());
+        $this->assertEmpty($class->getProperties());
+        $this->assertFalse($class->isAbstract());
+        $this->assertEmpty($class->getInterfaces());
+        $this->assertEmpty($class->getFunctions());
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setName
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidClassName
+     * @depends testCanConstructWithoutArguments
      */
     public function testCanSetValidClassNames()
     {
@@ -73,6 +72,7 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setName
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidClassName
      * @covers \DCarbone\PHPClassBuilder\Template\AbstractTemplate::createInvalidClassNameException
+     * @depends testCanConstructWithoutArguments
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidClassNameException
      */
     public function testExceptionThrownWhenPassingInvalidClassNameToConstructor()
@@ -83,6 +83,7 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setNamespace
      * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidNamespaceName
+     * @depends testCanConstructWithoutArguments
      */
     public function testCanSetValidNamespaceName()
     {
@@ -98,6 +99,7 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setNamespace
      * @covers \DCarbone\PHPClassBuilder\Template\AbstractTemplate::createInvalidNamespaceNameException
+     * @depends testCanConstructWithoutArguments
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException
      */
     public function testExceptionThrownWhenPassingInvalidNamespaceNameToConstructor()
@@ -108,18 +110,20 @@ class ClassTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setParent
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getParent
+     * @depends testCanConstructWithoutArguments
      */
     public function testCanSetClassTemplateAsParent()
     {
         $child = new ClassTemplate('Child');
         $parent = new ClassTemplate('Parent');
         $child->setParent($parent);
-        $this->assertEquals($parent, $child->getParent());
+        $this->assertSame($parent, $child->getParent());
     }
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::setParent
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate::getParent
+     * @depends testCanConstructWithoutArguments
      */
     public function testCanSetStringAsParent()
     {
