@@ -28,13 +28,11 @@ class InterfaceTemplate extends AbstractStructureTemplate
     /** @var string */
     private $_name = null;
     /** @var string[]|InterfaceTemplate[] */
-    private $_interfaces = array();
+    private $_parentInterfaces = array();
     /** @var array */
-    private $_methods = array();
+    private $_functions = array();
     /** @var null|string */
-    private $_namespace;
-    /** @var \DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate[] */
-    private $_preDeclarationComments = array();
+    private $_namespace = null;
 
     /**
      * Constructor
@@ -64,60 +62,102 @@ class InterfaceTemplate extends AbstractStructureTemplate
      */
     public function setName($name)
     {
-        $this->_name = $name;
+        if (NameUtils::isValidInterfaceName($name))
+            $this->_name = $name;
+        else
+            throw $this->createInvalidNamespaceNameException($name);
     }
 
     /**
      * @return InterfaceTemplate[]|string[]
      */
-    public function getInterfaces()
+    public function getParentInterfaces()
     {
-        return $this->_interfaces;
+        return $this->_parentInterfaces;
+    }
+
+    /**
+     * @param $interface
+     */
+    public function addParentInterface($interface)
+    {
+        if (is_string($interface))
+        {
+            $this->_parentInterfaces[$interface] = $interface;
+        }
+        else if ($interface instanceof InterfaceTemplate)
+        {
+            $name = $interface->getName();
+            if (null === $name)
+                throw $this->createMissingNameException('Must define interface name prior to adding to another interface.');
+
+            $this->_parentInterfaces[$name] = $interface;
+        }
+        else
+        {
+            throw $this->createInvalidInterfaceParentArgumentException($interface);
+        }
     }
 
     /**
      * @param InterfaceTemplate[]|string[] $interfaces
      */
-    public function setInterfaces($interfaces)
+    public function setParentInterfaces(array $interfaces)
     {
-        $this->_interfaces = $interfaces;
+        $this->_parentInterfaces = array();
+        foreach($interfaces as $interface)
+        {
+            $this->addParentInterface($interface);
+        }
     }
 
     /**
      * @return FunctionTemplate[]
      */
-    public function getMethods()
+    public function getFunctions()
     {
-        return $this->_methods;
+        return $this->_functions;
     }
 
     /**
      * @param FunctionTemplate $method
      */
-    public function addMethod(FunctionTemplate $method)
+    public function addFunction(FunctionTemplate $method)
     {
-        $this->_methods[$method->getName()] = $method;
+        $this->_functions[$method->getName()] = $method;
     }
 
     /**
      * @param string $name
      * @return bool
      */
-    public function hasMethod($name)
+    public function hasFunction($name)
     {
-        return isset($this->_methods[$name]);
+        return isset($this->_functions[$name]);
     }
 
     /**
      * @param string $name
      * @return FunctionTemplate|null
      */
-    public function getMethod($name)
+    public function getFunction($name)
     {
-        if (isset($this->_methods[$name]))
-            return $this->_methods[$name];
+        if (isset($this->_functions[$name]))
+            return $this->_functions[$name];
 
         return null;
+    }
+
+    /**
+     * @param FunctionTemplate[] $functions
+     */
+    public function setFunctions(array $functions)
+    {
+        $this->_functions = array();
+        foreach($functions as $function)
+        {
+            $this->addFunction($function);
+        }
     }
 
     /**
@@ -137,22 +177,6 @@ class InterfaceTemplate extends AbstractStructureTemplate
             $this->_namespace = $namespace;
         else
             throw $this->createInvalidNamespaceNameException($namespace);
-    }
-
-    /**
-     * @return Comment\AbstractCommentTemplate[]
-     */
-    public function getPreDeclarationComments()
-    {
-        return $this->_preDeclarationComments;
-    }
-
-    /**
-     * @param Comment\AbstractCommentTemplate[] $preDeclarationComments
-     */
-    public function setPreDeclarationComments($preDeclarationComments)
-    {
-        $this->_preDeclarationComments = $preDeclarationComments;
     }
 
     /**

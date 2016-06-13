@@ -27,6 +27,9 @@ use DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate;
  */
 class FunctionTemplateTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return string
+     */
     protected static function generateTestFunctionName()
     {
         static $i = 0;

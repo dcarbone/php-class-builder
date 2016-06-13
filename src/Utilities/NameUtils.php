@@ -60,4 +60,13 @@ abstract class NameUtils
     {
         return is_string($name) && 1 === preg_match(self::NAMESPACE_NAME_REGEX, $name);
     }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public static function isValidInterfaceName($name)
+    {
+        return is_string($name) && 1 === preg_match(self::PHP_IDENTIFIER_REGEX, $name);
+    }
 }

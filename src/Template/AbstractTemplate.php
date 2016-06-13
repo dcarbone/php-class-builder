@@ -24,6 +24,7 @@ use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceParentArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
 use DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException;
@@ -220,6 +221,19 @@ abstract class AbstractTemplate
             '%s - Function body lines must be strings, %s seen.',
             get_class($this),
             $this->_determineExceptionValueOutput($line)
+        ));
+    }
+
+    /**
+     * @param mixed $argument
+     * @return InvalidInterfaceParentArgumentException
+     */
+    protected function createInvalidInterfaceParentArgumentException($argument)
+    {
+        return new InvalidInterfaceParentArgumentException(sprintf(
+            '%s - Interface parent arguments must either be a string or an instance of InterfaceTemplate, %s seen.',
+            get_class($this),
+            $this->_determineExceptionValueOutput($argument)
         ));
     }
 

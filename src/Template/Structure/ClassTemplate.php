@@ -51,9 +51,7 @@ class ClassTemplate extends AbstractStructureTemplate
      * @param string|null $namespace
      * @param bool|false $abstract
      */
-    public function __construct($name = null,
-                                $namespace = null,
-                                $abstract = false)
+    public function __construct($name = null, $namespace = null, $abstract = false)
     {
         if (null !== $name)
             $this->setName($name);
