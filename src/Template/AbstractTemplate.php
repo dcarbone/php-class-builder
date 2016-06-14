@@ -24,12 +24,14 @@ use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceFunctionScopeException;
 use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceParentArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
 use DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException;
 use DCarbone\PHPClassBuilder\Exception\MissingNameException;
+use DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate;
 
 /**
  * Class AbstractTemplate
@@ -248,6 +250,20 @@ abstract class AbstractTemplate
             '%s - Interface parent arguments must either be a string or an instance of InterfaceTemplate, %s seen.',
             get_class($this),
             $this->_determineExceptionValueOutput($argument)
+        ));
+    }
+
+    /**
+     * @param FunctionTemplate $function
+     * @return InvalidInterfaceFunctionScopeException
+     */
+    protected function createInvalidInterfaceFunctionScopeException(FunctionTemplate $function)
+    {
+        return new InvalidInterfaceFunctionScopeException(sprintf(
+            '%s - Interface functions must be public, added function %s has scope of %s.',
+            get_class($this),
+            $this->_determineExceptionValueOutput($function->getName()),
+            (string)$function->getScope()
         ));
     }
 

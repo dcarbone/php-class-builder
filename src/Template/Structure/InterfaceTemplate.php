@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Enum\ScopeEnum;
 use DCarbone\PHPClassBuilder\Template\Comment;
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
@@ -77,7 +78,7 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param $interface
+     * @param InterfaceTemplate|string $interface
      */
     public function addParentInterface($interface)
     {
@@ -120,11 +121,14 @@ class InterfaceTemplate extends AbstractStructureTemplate
     }
 
     /**
-     * @param FunctionTemplate $method
+     * @param FunctionTemplate $function
      */
-    public function addFunction(FunctionTemplate $method)
+    public function addFunction(FunctionTemplate $function)
     {
-        $this->_functions[$method->getName()] = $method;
+        if (ScopeEnum::_PUBLIC === (string)$function->getScope())
+            $this->_functions[$function->getName()] = $function;
+        else
+            throw $this->createInvalidInterfaceFunctionScopeException($function);
     }
 
     /**

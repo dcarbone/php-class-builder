@@ -63,8 +63,8 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setNamespace
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getNamespace
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getName
      * 
      * @depends testCanConstructWithoutArguments
      */
@@ -101,8 +101,8 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidNamespaceName
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setNamespace
+     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidNamespaceName
      * @depends testCanConstructWithValidNameArgument
      */
     public function testCanConstructWithValidNamespaceArgument()
