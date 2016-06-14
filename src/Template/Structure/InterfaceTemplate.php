@@ -65,7 +65,7 @@ class InterfaceTemplate extends AbstractStructureTemplate
         if (NameUtils::isValidInterfaceName($name))
             $this->_name = $name;
         else
-            throw $this->createInvalidNamespaceNameException($name);
+            throw $this->createInvalidInterfaceNameException($name);
     }
 
     /**

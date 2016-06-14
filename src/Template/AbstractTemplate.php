@@ -24,6 +24,7 @@ use DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFilePartException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException;
+use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidInterfaceParentArgumentException;
 use DCarbone\PHPClassBuilder\Exception\InvalidNamespaceNameException;
 use DCarbone\PHPClassBuilder\Exception\InvalidOutputPathException;
@@ -72,6 +73,19 @@ abstract class AbstractTemplate
     {
         return new InvalidClassNameException(sprintf(
             '%s - Specified class name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information.',
+            get_class($this),
+            $this->_determineExceptionValueOutput($name)
+        ));
+    }
+
+    /**
+     * @param mixed $name
+     * @return InvalidInterfaceNameException
+     */
+    protected function createInvalidInterfaceNameException($name)
+    {
+        return new InvalidInterfaceNameException(sprintf(
+            '%s - Specified interface name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information.',
             get_class($this),
             $this->_determineExceptionValueOutput($name)
         ));

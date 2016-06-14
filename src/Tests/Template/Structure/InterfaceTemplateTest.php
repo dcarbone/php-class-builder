@@ -78,6 +78,8 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
+     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidInterfaceName
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException
      * @depends testCanConstructWithValidNameArgument
      */
     public function testExceptionThrownWhenConstructingWithInvalidStringName()
@@ -88,6 +90,8 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
+     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidInterfaceName
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException
      * @depends testCanConstructWithValidNameArgument
      */
     public function testExceptionThrownWhenConstructingWithInvalidNameType()
@@ -97,8 +101,9 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\Utilities\NameUtils::isValidNamespaceName
-     * @depends
+     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidNamespaceName
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setNamespace
+     * @depends testCanConstructWithValidNameArgument
      */
     public function testCanConstructWithValidNamespaceArgument()
     {
