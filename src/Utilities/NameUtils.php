@@ -22,6 +22,7 @@
  */
 abstract class NameUtils
 {
+    // Based upon regex seen here: http://php.net/manual/en/language.oop5.basic.php
     const PHP_IDENTIFIER_REGEX = '{^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$}S';
     const NAMESPACE_NAME_REGEX = '{^[a-zA-Z_\x7f-\xff\\\][a-zA-Z0-9_\x7f-\xff\\\]*$}S';
 
