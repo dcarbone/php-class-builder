@@ -72,7 +72,7 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
     {
         $intName = self::generateTestInterfaceName();
         $int = new InterfaceTemplate($intName);
-        $this->assertEquals($intName, $int->getNamespace());
+        $this->assertEquals($intName, $int->getName());
     }
 
     /**
