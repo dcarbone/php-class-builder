@@ -638,6 +638,7 @@ STRING
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
      * @depends testCanCompileAsBareFunction
      */
@@ -666,6 +667,7 @@ PHP
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
      * @depends testCanCompileAsBareFunction
      */
@@ -694,6 +696,7 @@ PHP
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
      * @depends testCanCompileAsClassMethod
      */
@@ -719,6 +722,7 @@ PHP
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
      * @depends testCanCompileAsClassMethod
      */
@@ -748,6 +752,7 @@ PHP
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildDocBloc
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildReturnStatement
      * @depends testCanCompileAsClassMethod
      */
@@ -771,5 +776,43 @@ PHP
 
 PHP
             , $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildBody
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_compileBody
+     * @depends testCanCompileAsBareFunction
+     */
+    public function testCanOutputFunctionWithoutBody()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->addBodyPart('echo \'woot!\';');
+        $output = $func->compile(array(
+            CompileOpt::INC_BODY => false
+        ));
+        $this->assertEquals(<<<PHP
+function {$funcName}();
+
+
+PHP
+            , $output);
+    }
+
+    /**
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::compile
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::parseCompileOpts
+     * @covers \DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate::_buildParameters
+     * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     * @depends testCanOutputFunctionWithoutBody
+     */
+    public function testExceptionThrownWhenUsingInvalidInclueBodyCompileArgument()
+    {
+        $funcName = self::generateTestFunctionName();
+        $func = new FunctionTemplate($funcName);
+        $func->compile(array(CompileOpt::INC_BODY => 'woot!'));
     }
 }
