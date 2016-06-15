@@ -48,24 +48,26 @@ abstract class AbstractTemplate
     abstract public function compile(array $opts = array());
 
     /**
-     * @param array $opts
-     * @return array
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
-     */
-    abstract protected function parseCompileOpts(array $opts);
-
-    /**
      * @return array
      */
     abstract public function getDefaultCompileOpts();
 
     /**
+     * TODO: All templates MUST be able to compile with no options
+     *
      * @return string
      */
     public function __toString()
     {
         return $this->compile();
     }
+
+    /**
+     * @param array $opts
+     * @return array
+     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     */
+    abstract protected function parseCompileOpts(array $opts);
 
     /**
      * @param mixed $name

@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 use DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate;
 
 /**
@@ -102,7 +103,6 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
      * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setNamespace
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidNamespaceName
      * @depends testCanConstructWithValidNameArgument
      */
     public function testCanConstructWithValidNamespaceArgument()

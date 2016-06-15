@@ -809,7 +809,7 @@ PHP
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      * @depends testCanOutputFunctionWithoutBody
      */
-    public function testExceptionThrownWhenUsingInvalidInclueBodyCompileArgument()
+    public function testExceptionThrownWhenUsingInvalidIncludeBodyCompileOption()
     {
         $funcName = self::generateTestFunctionName();
         $func = new FunctionTemplate($funcName);

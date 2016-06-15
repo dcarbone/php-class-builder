@@ -10,11 +10,12 @@
         verbose="true"
         stopOnFailure="false"
         processIsolation="false"
-        backupGlobals="false"
-        syntaxCheck="true"
-        >
+        backupGlobals="false">
 
     <testsuites>
+        <testsuite name="utilities">
+            <directory>src/Tests/Utilities</directory>
+        </testsuite>
         <testsuite name="comments">
             <directory>src/Tests/Template/Comment</directory>
         </testsuite>
