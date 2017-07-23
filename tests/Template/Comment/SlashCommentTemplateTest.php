@@ -18,47 +18,37 @@
 
 use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SlashCommentTemplateTest
  */
-class SlashCommentTemplateTest extends \PHPUnit_Framework_TestCase
-{
-    public function testCanConstructCommentWithoutText()
-    {
+class SlashCommentTemplateTest extends TestCase {
+    public function testCanConstructCommentWithoutText() {
         $comment = new SlashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\SlashCommentTemplate', $comment);
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
      */
-    public function testNoOutputWhenEmptyByDefault()
-    {
+    public function testNoOutputWhenEmptyByDefault() {
         $comment = new SlashCommentTemplate();
         $this->assertEmpty($comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetEmptyComment()
-    {
+    public function testCanGetEmptyComment() {
         $comment = new SlashCommentTemplate();
         $this->assertEmpty($comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true)));
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::addLine
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\SlashCommentTemplate::compile
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanAddLine()
-    {
+    public function testCanAddLine() {
         $comment = new SlashCommentTemplate();
         $comment->addLine('super great comment');
         $this->assertEquals("    // super great comment\n", $comment->compile());

@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.7/phpunit.xsd"
         bootstrap="./vendor/autoload.php"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         verbose="true"
-        stopOnFailure="false"
+        stopOnFailure="true"
         processIsolation="false"
         backupGlobals="false">
 
     <testsuites>
         <testsuite name="utilities">
-            <directory>src/Tests/Utilities</directory>
+            <directory>tests/Utilities</directory>
         </testsuite>
         <testsuite name="comments">
-            <directory>src/Tests/Template/Comment</directory>
+            <directory>tests/Template/Comment</directory>
         </testsuite>
         <testsuite name="structure">
-            <directory>src/Tests/Template/Structure</directory>
+            <directory>tests/Template/Structure</directory>
         </testsuite>
         <testsuite name="file">
-            <file>src/Tests/Template/FileTemplateTest.php</file>
+            <file>tests/Template/FileTemplateTest.php</file>
         </testsuite>
     </testsuites>
 

@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Exception;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
  * Class InvalidFunctionNameException
  * @package DCarbone\PHPClassBuilder\Exception
  */
-class InvalidFunctionNameException extends \InvalidArgumentException
-{
+class InvalidFunctionNameException extends \InvalidArgumentException {
 
 }

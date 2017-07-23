@@ -17,40 +17,30 @@
  */
 
 use DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class InterfaceTemplateTest
  * @package DCarbone\PHPClassBuilder\Tests\Template\Structure
  */
-class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
-{
+class InterfaceTemplateTest extends TestCase {
     /**
      * @return string
      */
-    protected static function generateTestInterfaceName()
-    {
+    protected static function generateTestInterfaceName() {
         static $i = 0;
         return sprintf('_class_builder_interface_test_%d', $i++);
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     */
-    public function testCanConstructWithoutArguments()
-    {
+    public function testCanConstructWithoutArguments() {
         $int = new InterfaceTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Structure\\InterfaceTemplate', $int);
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getName
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getNamespace
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getParentInterfaces
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getFunctions
      * @depends testCanConstructWithoutArguments
      */
-    public function testDefaultValues()
-    {
+    public function testDefaultValues() {
         $int = new InterfaceTemplate();
         $this->assertNull($int->getName());
         $interfaces = $int->getParentInterfaces();
@@ -63,50 +53,34 @@ class InterfaceTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::getName
-     * 
      * @depends testCanConstructWithoutArguments
      */
-    public function testCanConstructWithValidNameArgument()
-    {
+    public function testCanConstructWithValidNameArgument() {
         $intName = self::generateTestInterfaceName();
         $int = new InterfaceTemplate($intName);
         $this->assertEquals($intName, $int->getName());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidInterfaceName
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException
      * @depends testCanConstructWithValidNameArgument
      */
-    public function testExceptionThrownWhenConstructingWithInvalidStringName()
-    {
+    public function testExceptionThrownWhenConstructingWithInvalidStringName() {
         new InterfaceTemplate('#woot');
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setName
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidInterfaceName
      * @expectedException \DCarbone\PHPClassBuilder\Exception\InvalidInterfaceNameException
      * @depends testCanConstructWithValidNameArgument
      */
-    public function testExceptionThrownWhenConstructingWithInvalidNameType()
-    {
+    public function testExceptionThrownWhenConstructingWithInvalidNameType() {
         new InterfaceTemplate(true);
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::__construct
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\InterfaceTemplate::setNamespace
      * @depends testCanConstructWithValidNameArgument
      */
-    public function testCanConstructWithValidNamespaceArgument()
-    {
+    public function testCanConstructWithValidNamespaceArgument() {
         $ns = 'MyAwesome\\NS';
         $int = new InterfaceTemplate(null, $ns);
         $this->assertEquals($ns, $int->getNamespace());

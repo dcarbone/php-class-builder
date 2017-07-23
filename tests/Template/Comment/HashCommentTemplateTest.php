@@ -18,81 +18,64 @@
 
 use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class HashCommentTemplateTest
  */
-class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
-{
-    public function testCanConstructCommentWithoutText()
-    {
+class HashCommentTemplateTest extends TestCase {
+    public function testCanConstructCommentWithoutText() {
         $comment = new HashCommentTemplate();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\HashCommentTemplate', $comment);
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
      */
-    public function testNoOutputWhenEmptyByDefault()
-    {
+    public function testNoOutputWhenEmptyByDefault() {
         $comment = new HashCommentTemplate();
         $this->assertEmpty($comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::parseCompileOpts
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetEmptyComment()
-    {
+    public function testCanGetEmptyComment() {
         $comment = new HashCommentTemplate();
         $this->assertEmpty($comment->compile(array(CompileOpt::OUTPUT_BLANK_COMMENT => true)));
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanAddLineToComment()
-    {
+    public function testCanAddLineToComment() {
         $comment = new HashCommentTemplate();
         $comment->addLine('woop woop');
         $this->assertEquals("    # woop woop\n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addLines
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanAddMultipleLines()
-    {
+    public function testCanAddMultipleLines() {
         $comment = new HashCommentTemplate();
         $comment->addLines(array('quiet line', 'LOUD LINE'));
         $this->assertEquals("    # quiet line\n    # LOUD LINE\n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::compile
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::addEmptyLine
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanAddEmptyLine()
-    {
+    public function testCanAddEmptyLine() {
         $comment = new HashCommentTemplate();
         $comment->addEmptyLine();
         $this->assertEquals("    # \n", $comment->compile());
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::getLines
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetLinesArray()
-    {
+    public function testCanGetLinesArray() {
         $comment = new HashCommentTemplate();
         $lines = array(
             'neato line',
@@ -103,24 +86,24 @@ class HashCommentTemplateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCountReturnsZeroWhenEmpty()
-    {
+    public function testCountReturnsZeroWhenEmpty() {
         $comment = new HashCommentTemplate();
         $this->assertEquals(0, count($comment));
     }
 
     /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Comment\HashCommentTemplate::count
      * @depends testCanConstructCommentWithoutText
      */
-    public function testCanGetCorrectCount()
-    {
+    public function testCanGetCorrectCount() {
         $comment = new HashCommentTemplate();
         $comment->addLines(array(
-            1,2,3,4,5
+            1,
+            2,
+            3,
+            4,
+            5
         ));
         $this->assertEquals(5, count($comment));
     }

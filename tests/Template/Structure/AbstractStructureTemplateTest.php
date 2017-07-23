@@ -15,32 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 use DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractStructureTemplateTest
  * @package DCarbone\PHPClassBuilder\Tests\Template\Structure
  */
-class AbstractStructureTemplateTest extends \PHPUnit_Framework_TestCase
-{
+class AbstractStructureTemplateTest extends TestCase {
     private static $_class = '\\DCarbone\\PHPClassBuilder\\Template\\Structure\\AbstractStructureTemplate';
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\AbstractStructureTemplate::getDocBlockComment
-     */
-    public function testCanGetCommentTemplateWithoutSpecifyOne()
-    {
+    public function testCanGetCommentTemplateWithoutSpecifyOne() {
         $stub = $this->getMockForAbstractClass(self::$_class);
         $comment = $stub->getDocBlockComment();
         $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\Comment\\DoubleStarCommentTemplate', $comment);
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\AbstractStructureTemplate::setDocBlockComment
-     * @covers \DCarbone\PHPClassBuilder\Template\Structure\AbstractStructureTemplate::getDocBlockComment
-     */
-    public function testCanSetCommentTemplate()
-    {
+    public function testCanSetCommentTemplate() {
         $stub = $this->getMockForAbstractClass(self::$_class);
         $comment = new DoubleStarCommentTemplate();
         $stub->setDocBlockComment($comment);

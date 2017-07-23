@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,44 +37,22 @@ use DCarbone\PHPClassBuilder\Template\Structure\FunctionTemplate;
  * Class AbstractTemplate
  * @package DCarbone\PHPClassBuilder\Template
  */
-abstract class AbstractTemplate
-{
-    /**
-     * TODO: This method of passing arguments is flawed and could become cumbersome quickly.
-     *
-     * @param array $opts
-     * @return string
-     */
-    abstract public function compile(array $opts = array());
-
-    /**
-     * @return array
-     */
-    abstract public function getDefaultCompileOpts();
+abstract class AbstractTemplate implements TemplateInterface {
 
     /**
      * TODO: All templates MUST be able to compile with no options
      *
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->compile();
     }
-
-    /**
-     * @param array $opts
-     * @return array
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
-     */
-    abstract protected function parseCompileOpts(array $opts);
 
     /**
      * @param mixed $name
      * @return InvalidClassNameException
      */
-    protected function createInvalidClassNameException($name)
-    {
+    protected function createInvalidClassNameException($name) {
         return new InvalidClassNameException(sprintf(
             '%s - Specified class name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information.',
             get_class($this),
@@ -86,8 +64,7 @@ abstract class AbstractTemplate
      * @param mixed $name
      * @return InvalidInterfaceNameException
      */
-    protected function createInvalidInterfaceNameException($name)
-    {
+    protected function createInvalidInterfaceNameException($name) {
         return new InvalidInterfaceNameException(sprintf(
             '%s - Specified interface name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information.',
             get_class($this),
@@ -99,8 +76,7 @@ abstract class AbstractTemplate
      * @param mixed $namespace
      * @return InvalidNamespaceNameException
      */
-    protected function createInvalidNamespaceNameException($namespace)
-    {
+    protected function createInvalidNamespaceNameException($namespace) {
         return new InvalidNamespaceNameException(sprintf(
             '%s - Specified namespace "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information',
             get_class($this),
@@ -109,11 +85,10 @@ abstract class AbstractTemplate
     }
 
     /**
-     * @param mixed $name
-     * @return InvalidFunctionNameException
+     * @param string $name
+     * @return \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      */
-    protected function createInvalidFunctionNameException($name)
-    {
+    protected function createInvalidFunctionNameException($name) {
         return new InvalidFunctionNameException(sprintf(
             '%s - Specified method name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information',
             get_class($this),
@@ -122,11 +97,10 @@ abstract class AbstractTemplate
     }
 
     /**
-     * @param mixed $name
-     * @return InvalidFunctionNameException
+     * @param string $name
+     * @return \DCarbone\PHPClassBuilder\Exception\InvalidVariableNameException
      */
-    protected function createInvalidVariableNameException($name)
-    {
+    protected function createInvalidVariableNameException($name) {
         return new InvalidVariableNameException(sprintf(
             '%s - Specified variable name "%s" is not valid.  Please see http://php.net/manual/en/language.oop5.basic.php for more information',
             get_class($this),
@@ -136,10 +110,9 @@ abstract class AbstractTemplate
 
     /**
      * @param string $context
-     * @return MissingNameException
+     * @return \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
-    protected function createMissingNameException($context)
-    {
+    protected function createMissingNameException($context) {
         return new MissingNameException(sprintf(
             '%s - %s',
             get_class($this),
@@ -151,10 +124,9 @@ abstract class AbstractTemplate
      * @param string $arg
      * @param string $expectedStatement
      * @param mixed $actualValue
-     * @return InvalidCompileOptionValueException
+     * @return \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
-    protected function createInvalidCompileOptionValueException($arg, $expectedStatement, $actualValue)
-    {
+    protected function createInvalidCompileOptionValueException($arg, $expectedStatement, $actualValue) {
         return new InvalidCompileOptionValueException(sprintf(
             '%s - Specified invalid value "%s" for compile argument "%s". Expected: %s',
             get_class($this),
@@ -168,8 +140,7 @@ abstract class AbstractTemplate
      * @param mixed $sought
      * @return \OutOfBoundsException
      */
-    protected function createFilePartNotFoundException($sought)
-    {
+    protected function createFilePartNotFoundException($sought) {
         return new FilePartNotFoundException(sprintf(
             '%s - Specified invalid offset "%s".',
             get_class($this),
@@ -181,8 +152,7 @@ abstract class AbstractTemplate
      * @param mixed $part
      * @return InvalidFilePartException
      */
-    protected function createInvalidFilePartException($part)
-    {
+    protected function createInvalidFilePartException($part) {
         return new InvalidFilePartException(sprintf(
             '%s - Files may only contain Comments and Structures, attempted to add "%s".',
             get_class($this),
@@ -194,8 +164,7 @@ abstract class AbstractTemplate
      * @param mixed $path
      * @return InvalidOutputPathException
      */
-    protected function createInvalidOutputPathException($path)
-    {
+    protected function createInvalidOutputPathException($path) {
         return new InvalidOutputPathException(sprintf(
             '%s - Specified output path "%s" does not appear to be a valid filepath.',
             get_class($path),
@@ -207,8 +176,7 @@ abstract class AbstractTemplate
      * @param mixed $line
      * @return InvalidCommentLineArgumentException
      */
-    protected function createInvalidCommentLineArgumentException($line)
-    {
+    protected function createInvalidCommentLineArgumentException($line) {
         return new InvalidCommentLineArgumentException(sprintf(
             '%s - Comment lines must be scalar types, %s seen.',
             get_class($this),
@@ -220,8 +188,7 @@ abstract class AbstractTemplate
      * @param mixed $offset
      * @return CommentLineIndexNotFoundException
      */
-    protected function createCommentLineIndexNotFoundException($offset)
-    {
+    protected function createCommentLineIndexNotFoundException($offset) {
         return new CommentLineIndexNotFoundException(sprintf(
             '%s - Comment has no line at index "%s"',
             get_class($this),
@@ -233,8 +200,7 @@ abstract class AbstractTemplate
      * @param mixed $line
      * @return InvalidFunctionBodyPartArgumentException
      */
-    protected function createInvalidFunctionBodyPartArgumentException($line)
-    {
+    protected function createInvalidFunctionBodyPartArgumentException($line) {
         return new InvalidFunctionBodyPartArgumentException(sprintf(
             '%s - Function body lines must be strings, %s seen.',
             get_class($this),
@@ -246,8 +212,7 @@ abstract class AbstractTemplate
      * @param mixed $argument
      * @return InvalidInterfaceParentArgumentException
      */
-    protected function createInvalidInterfaceParentArgumentException($argument)
-    {
+    protected function createInvalidInterfaceParentArgumentException($argument) {
         return new InvalidInterfaceParentArgumentException(sprintf(
             '%s - Interface parent arguments must either be a string or an instance of InterfaceTemplate, %s seen.',
             get_class($this),
@@ -259,8 +224,7 @@ abstract class AbstractTemplate
      * @param FunctionTemplate $function
      * @return InvalidInterfaceFunctionScopeException
      */
-    protected function createInvalidInterfaceFunctionScopeException(FunctionTemplate $function)
-    {
+    protected function createInvalidInterfaceFunctionScopeException(FunctionTemplate $function) {
         return new InvalidInterfaceFunctionScopeException(sprintf(
             '%s - Interface functions must be public, added function %s has scope of %s.',
             get_class($this),
@@ -273,10 +237,8 @@ abstract class AbstractTemplate
      * @param mixed $value
      * @return string
      */
-    private function _determineExceptionValueOutput($value)
-    {
-        switch(gettype($value))
-        {
+    private function _determineExceptionValueOutput($value) {
+        switch (gettype($value)) {
             case 'string':
                 return $value;
 

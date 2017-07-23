@@ -1,7 +1,7 @@
-<?php namespace DCarbone\PHPClassBuilder\Tests\Template;
+<?php namespace DCarbone\PHPClassBuilder\Template;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Template\FileTemplate;
-
 /**
- * Class FileTemplateTest
- * @package DCarbone\PHPClassBuilder\Tests\Template
+ * Interface TemplateInterface
+ * @package DCarbone\PHPClassBuilder\Template
  */
-class FileTemplateTest extends \PHPUnit_Framework_TestCase
-{
-    public function testCanConstructTemplate()
-    {
-        $file = new FileTemplate();
-        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\FileTemplate', $file);
-    }
+interface TemplateInterface {
+    /**
+     * TODO: This method of passing arguments is flawed and could become cumbersome quickly.
+     *
+     * @param array $opts
+     * @return string
+     */
+    public function compile(array $opts = []);
 }

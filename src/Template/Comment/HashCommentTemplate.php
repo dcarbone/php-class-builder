@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,19 @@
  * Class HashCommentTemplate
  * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-class HashCommentTemplate extends AbstractCommentTemplate
-{
+class HashCommentTemplate extends AbstractCommentTemplate {
     /**
      * @param array $opts
      * @return string
      */
-    public function compile(array $opts = array())
-    {
-        list($leadingSpaces, $outputBlank) = $this->parseCompileOpts($opts);
-
-        if (false === $outputBlank && 0 === count($this))
+    public function compile(array $opts = array()) {
+        if ($this->isBlank()) {
             return '';
+        }
 
         $output = '';
-        $spaces = str_repeat(' ', $leadingSpaces);
-        foreach($this->getLines() as $line)
-        {
+        $spaces = str_repeat(' ', $this->getOffset());
+        foreach ($this->getLines() as $line) {
             $output = sprintf("%s%s# %s\n", $output, $spaces, $line);
         }
         return $output;

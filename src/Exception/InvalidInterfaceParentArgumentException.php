@@ -4,7 +4,6 @@
  * Class InvalidInterfaceParentArgumentException
  * @package DCarbone\PHPClassBuilder\Exception
  */
-class InvalidInterfaceParentArgumentException extends \InvalidArgumentException
-{
+class InvalidInterfaceParentArgumentException extends \InvalidArgumentException {
 
 }

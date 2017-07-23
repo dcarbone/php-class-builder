@@ -1,6 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Tests\Utilities;
 
 use DCarbone\PHPClassBuilder\Utilities\NameUtils;
+use PHPUnit\Framework\TestCase;
 
 /*
  * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,13 +23,9 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
  * Class NameUtilsTest
  * @package DCarbone\PHPClassBuilder\Tests\Utilities
  */
-class NameUtilsTest extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidVariableName
-     */
-    public function testReturnTrueWithValidVariableNames()
-    {
+class NameUtilsTest extends TestCase {
+
+    public function testReturnTrueWithValidVariableNames() {
         $this->assertTrue(NameUtils::isValidVariableName('varname'));
         $this->assertTrue(NameUtils::isValidVariableName('VARNAME'));
         $this->assertTrue(NameUtils::isValidVariableName('var_name'));
@@ -40,11 +37,7 @@ class NameUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(NameUtils::isValidVariableName('var2Name'));
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidVariableName
-     */
-    public function testReturnFalseWithInvalidVariableNames()
-    {
+    public function testReturnFalseWithInvalidVariableNames() {
         $this->assertFalse(NameUtils::isValidVariableName('91notvalid'));
         $this->assertFalse(NameUtils::isValidVariableName('nope nope'));
         $this->assertFalse(NameUtils::isValidVariableName(''));
@@ -53,11 +46,7 @@ class NameUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(NameUtils::isValidVariableName(12345));
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidFunctionName
-     */
-    public function testReturnTrueWithValidFunctionNames()
-    {
+    public function testReturnTrueWithValidFunctionNames() {
         $this->assertTrue(NameUtils::isValidFunctionName('getshorty'));
         $this->assertTrue(NameUtils::isValidFunctionName('getShorty'));
         $this->assertTrue(NameUtils::isValidFunctionName('GetShorty'));
@@ -68,11 +57,7 @@ class NameUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(NameUtils::isValidFunctionName('Face2Space'));
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidFunctionName
-     */
-    public function testReturnFalseWithInvalidFunctionNames()
-    {
+    public function testReturnFalseWithInvalidFunctionNames() {
         $this->assertFalse(NameUtils::isValidFunctionName('91notvalid'));
         $this->assertFalse(NameUtils::isValidFunctionName('nope nope'));
         $this->assertFalse(NameUtils::isValidFunctionName(''));
@@ -81,11 +66,7 @@ class NameUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(NameUtils::isValidFunctionName(12345));
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidClassName
-     */
-    public function testReturnTrueWithValidClassNames()
-    {
+    public function testReturnTrueWithValidClassNames() {
         $this->assertTrue(NameUtils::isValidClassName('MyAwesomeClass'));
         $this->assertTrue(NameUtils::isValidClassName('myawesomeclass'));
         $this->assertTrue(NameUtils::isValidClassName('my_awesome_class'));
@@ -93,11 +74,7 @@ class NameUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(NameUtils::isValidClassName('my2awesome3class4'));
     }
 
-    /**
-     * @covers \DCarbone\PHPClassBuilder\Utilities\NameUtils::isValidClassName
-     */
-    public function testReturnFalseWithInvalidClassNames()
-    {
+    public function testReturnFalseWithInvalidClassNames() {
         $this->assertFalse(NameUtils::isValidClassName('91notvalid'));
         $this->assertFalse(NameUtils::isValidClassName('nope nope'));
         $this->assertFalse(NameUtils::isValidClassName(''));

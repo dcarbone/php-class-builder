@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,172 +16,124 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Template\Comment\AbstractCommentTemplate;
-use DCarbone\PHPClassBuilder\Template\Structure\ClassTemplate;
+use DCarbone\PHPClassBuilder\Utilities\NameUtils;
 
 /**
  * Class FileTemplate
  * @package DCarbone\PHPClassBuilder\Template
  */
-class FileTemplate extends AbstractTemplate
-{
-    /** @var AbstractCommentTemplate[] */
-    private $_beforeClassComments = array();
-    /** @var ClassTemplate */
-    private $_class = null;
-    /** @var AbstractCommentTemplate[] */
-    private $_afterClassComments = array();
+class FileTemplate extends AbstractTemplate {
+
+    /** @var string */
+    private $filename;
+
+    /** @var string */
+    private $namespace;
+
+    /** @var \DCarbone\PHPClassBuilder\Template\TemplateInterface[] */
+    private $items = [];
 
     /**
-     * @param ClassTemplate $classTemplate
+     * FileTemplate constructor.
+     * @param $filename
      */
-    public function setClass(ClassTemplate $classTemplate)
-    {
-        $this->_class = $classTemplate;
-        $this->_class->setFile($this);
-    }
-
-    /**
-     * @return ClassTemplate
-     */
-    public function getClass()
-    {
-        return $this->_class;
-    }
-
-    /**
-     * @param AbstractCommentTemplate $comment
-     */
-    public function addBeforeClassComment(AbstractCommentTemplate $comment)
-    {
-        $this->_beforeClassComments[] = $comment;
-    }
-
-    /**
-     * @param array $comments
-     */
-    public function setBeforeClassComments(array $comments)
-    {
-        $this->_beforeClassComments = array();
-        foreach($comments as $comment)
-        {
-            $this->addBeforeClassComment($comment);
+    public function __construct($filename, $namespace = null, array $items = []) {
+        $this->filename = $filename;
+        if (null !==- $namespace) {
+            $this->setNamespace($namespace);
         }
-    }
-    
-    public function clearBeforeClassComments()
-    {
-        $this->_beforeClassComments = array();
+        $this->setItems($items);
     }
 
     /**
-     * @return Comment\AbstractCommentTemplate[]
+     * @param string $filename
      */
-    public function getBeforeClassComments()
-    {
-        return $this->_beforeClassComments;
+    public function setFilename($filename) {
+        $this->filename = $filename;
     }
 
     /**
-     * @param AbstractCommentTemplate $comment
+     * @return string
      */
-    public function addAfterClassComment(AbstractCommentTemplate $comment)
-    {
-        $this->_afterClassComments[] = $comment;
+    public function getFilename() {
+        return $this->filename;
     }
 
     /**
-     * @param array $comments
+     * @param string $namespace
      */
-    public function setAfterClassComments(array $comments)
-    {
-        $this->_afterClassComments = array();
-        foreach($comments as $comment)
-        {
-            $this->addAfterClassComment($comment);
+    public function setNamespace($namespace) {
+        if (NameUtils::isValidNamespaceName($namespace)) {
+            $this->namespace = $namespace;
+        } else {
+            throw $this->createInvalidNamespaceNameException($namespace);
         }
     }
 
-    public function clearAfterClassComments()
-    {
-        $this->_afterClassComments = array();
+    /**
+     * @param \DCarbone\PHPClassBuilder\Template\TemplateInterface $template
+     */
+    public function addItem(TemplateInterface $template) {
+        $this->items[] = $template;
     }
 
     /**
-     * @return Comment\AbstractCommentTemplate[]
+     * @param array $templates
      */
-    public function getAfterClassComments()
-    {
-        return $this->_afterClassComments;
+    public function setItems(array $templates) {
+        $this->items = [];
+        foreach($templates as $template) {
+            $this->addItem($template);
+        }
+    }
+
+    /**
+     * @param array $opts
+     * @return array
+     */
+    protected function parseCompileOpts(array $opts) {
+        return [];
     }
 
     /**
      * @param array $opts
      * @return string
      */
-    public function compile(array $opts = array())
-    {
+    public function compile(array $opts = []) {
         $file = '<?php';
 
-        if ($class = $this->getClass())
-        {
-            if ($ns = $class->getNamespace())
-                $file = sprintf("%s namespace %s;\n\n", $file, $ns);
-            else
-                $file = sprintf("%s\n\n", $file);
+        if ($this->namespace) {
+            $file = sprintf("%s namespace %s;", $file, $this->namespace);
         }
 
-        foreach($this->_beforeClassComments as $comment)
-        {
-            $file = sprintf("%s%s\n", $file, $comment->compile(array('leadingSpaces' => 0)));
-        }
+        $file .= "\n\n";
 
-        if ($class)
-            $file = sprintf("%s\n%s\n", $file, $class->compile(array('inFile' => true)));
-
-        foreach($this->_afterClassComments as $comment)
-        {
-            $file = sprintf("%s%s\n", $file, $comment->compile(array('leadingSpaces' => 0)));
+        foreach($this->items as $item) {
+            $file = sprintf("%s%s\n", $file, $item->compile());
         }
 
         return $file;
     }
 
+    public function getDefaultCompileOpts() {
+        return [];
+    }
+
     /**
-     * @param string$outputPath
+     * @param string $outputPath
      * @return bool
      */
-    public function writeToFile($outputPath)
-    {
-        if (is_dir($outputPath))
-        {
+    public function writeToFile($outputPath) {
+        if (is_dir($outputPath)) {
             $outputPath = sprintf(
                 '%s/%s.php',
                 rtrim(trim($outputPath), "/\\"),
-                $this->getClass()->getName()
+                $this->getFilename()
             );
 
             return (bool)file_put_contents($outputPath, $this->compile());
         }
 
         throw $this->createInvalidOutputPathException($outputPath);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaultCompileOpts()
-    {
-        return array();
-    }
-
-    /**
-     * @param array $opts
-     * @return array
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
-     */
-    protected function parseCompileOpts(array $opts)
-    {
-        return array();
     }
 }

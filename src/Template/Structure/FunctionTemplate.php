@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template\Structure;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ use DCarbone\PHPClassBuilder\Utilities\NameUtils;
  * Class MethodTemplate
  * @package DCarbone\PHPClassBuilder\Template\Method
  */
-class FunctionTemplate extends AbstractStructureTemplate
-{
+class FunctionTemplate extends AbstractStructureTemplate {
     const COMPILETYPE_CLASSMETHOD = 0;
     const COMPILETYPE_FUNCTION = 1;
 
@@ -54,15 +53,16 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param bool $static
      * @param bool $abstract
      */
-    public function __construct($name = null, ScopeEnum $scope = null, $static = false, $abstract = false)
-    {
-        if (null !== $name)
+    public function __construct($name = null, ScopeEnum $scope = null, $static = false, $abstract = false) {
+        if (null !== $name) {
             $this->setName($name);
+        }
 
-        if (null === $scope)
+        if (null === $scope) {
             $this->_scope = new ScopeEnum(ScopeEnum::_PUBLIC);
-        else
+        } else {
             $this->_scope = $scope;
+        }
 
         $this->_static = (bool)$static;
         $this->_abstract = (bool)$abstract;
@@ -72,43 +72,39 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param string $name
      * @throws \DCarbone\PHPClassBuilder\Exception\InvalidFunctionNameException
      */
-    public function setName($name)
-    {
-        if (NameUtils::isValidFunctionName($name))
+    public function setName($name) {
+        if (NameUtils::isValidFunctionName($name)) {
             $this->_name = $name;
-        else
+        } else {
             throw $this->createInvalidFunctionNameException($name);
+        }
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->_name;
     }
 
     /**
      * @param ScopeEnum $scope
      */
-    public function setScope(ScopeEnum $scope)
-    {
+    public function setScope(ScopeEnum $scope) {
         $this->_scope = $scope;
     }
 
     /**
      * @return ScopeEnum
      */
-    public function getScope()
-    {
+    public function getScope() {
         return $this->_scope;
     }
 
     /**
      * @return \DCarbone\PHPClassBuilder\Template\Structure\VariableTemplate[]
      */
-    public function getParameters()
-    {
+    public function getParameters() {
         return $this->_parameters;
     }
 
@@ -116,11 +112,11 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param VariableTemplate $parameter
      * @throws \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
-    public function addParameter(VariableTemplate $parameter)
-    {
+    public function addParameter(VariableTemplate $parameter) {
         $name = $parameter->getName();
-        if (null === $name)
+        if (null === $name) {
             throw $this->createMissingNameException('Function parameters must have a name prior to adding them');
+        }
 
         $this->_parameters[$name] = $parameter;
     }
@@ -129,8 +125,7 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param string $name
      * @return bool
      */
-    public function hasParameter($name)
-    {
+    public function hasParameter($name) {
         return isset($this->_parameters[$name]);
     }
 
@@ -138,10 +133,10 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param string $name
      * @return VariableTemplate|null
      */
-    public function getParameter($name)
-    {
-        if (isset($this->_parameters[$name]))
+    public function getParameter($name) {
+        if (isset($this->_parameters[$name])) {
             return $this->_parameters[$name];
+        }
 
         return null;
     }
@@ -150,8 +145,7 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param string $name
      * @return VariableTemplate|null
      */
-    public function createParameter($name)
-    {
+    public function createParameter($name) {
         $this->addParameter(new VariableTemplate($name));
         return $this->getParameter($name);
     }
@@ -159,51 +153,44 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @return null|string
      */
-    public function getReturnValueType()
-    {
+    public function getReturnValueType() {
         return $this->_returnValueType;
     }
 
     /**
      * @param null|string $returnValueType
      */
-    public function setReturnValueType($returnValueType)
-    {
+    public function setReturnValueType($returnValueType) {
         $this->_returnValueType = $returnValueType;
     }
 
     /**
      * @return null|string
      */
-    public function getReturnStatement()
-    {
+    public function getReturnStatement() {
         return $this->_returnStatement;
     }
 
     /**
      * @param null|string $returnStatement
      */
-    public function setReturnStatement($returnStatement)
-    {
+    public function setReturnStatement($returnStatement) {
         $this->_returnStatement = $returnStatement;
     }
 
     /**
      * @return string[]
      */
-    public function getBodyParts()
-    {
+    public function getBodyParts() {
         return $this->_bodyParts;
     }
 
     /**
      * @param string[] $body
      */
-    public function setBodyParts(array $body)
-    {
+    public function setBodyParts(array $body) {
         $this->_bodyParts = array();
-        foreach($body as $line)
-        {
+        foreach ($body as $line) {
             $this->addBodyPart($line);
         }
     }
@@ -212,43 +199,39 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param string $part
      * @throws \DCarbone\PHPClassBuilder\Exception\InvalidFunctionBodyPartArgumentException
      */
-    public function addBodyPart($part)
-    {
-        if (!is_string($part))
+    public function addBodyPart($part) {
+        if (!is_string($part)) {
             throw $this->createInvalidFunctionBodyPartArgumentException($part);
-            
+        }
+
         $this->_bodyParts[] = $part;
     }
 
     /**
      * @return boolean
      */
-    public function isStatic()
-    {
+    public function isStatic() {
         return $this->_static;
     }
 
     /**
      * @param boolean $static
      */
-    public function setStatic($static)
-    {
+    public function setStatic($static) {
         $this->_static = (bool)$static;
     }
 
     /**
      * @return boolean
      */
-    public function isAbstract()
-    {
+    public function isAbstract() {
         return $this->_abstract;
     }
 
     /**
      * @param boolean $abstract
      */
-    public function setAbstract($abstract)
-    {
+    public function setAbstract($abstract) {
         $this->_abstract = (bool)$abstract;
     }
 
@@ -257,10 +240,10 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @return string
      * @throws \DCarbone\PHPClassBuilder\Exception\MissingNameException
      */
-    public function compile(array $opts = array())
-    {
-        if (false === NameUtils::isValidFunctionName($this->getName()))
+    public function compile(array $opts = array()) {
+        if (false === NameUtils::isValidFunctionName($this->getName())) {
             throw $this->createMissingNameException('Function name not defined at compile time');
+        }
 
         list(
             $type,
@@ -268,23 +251,22 @@ class FunctionTemplate extends AbstractStructureTemplate
             $includeComment,
             $incBody) = $this->parseCompileOpts($opts);
 
-        switch($type)
-        {
+        switch ($type) {
             case self::COMPILETYPE_FUNCTION:
                 return $this->_compileAsFunction($leadingSpaces, $includeComment, $incBody);
             case self::COMPILETYPE_CLASSMETHOD:
                 return $this->_compileAsClassMethod($leadingSpaces, $includeComment, $incBody);
 
             // TODO: Should not be reachable, but do something?
-            default: return '';
+            default:
+                return '';
         }
     }
 
     /**
      * @return array
      */
-    public function getDefaultCompileOpts()
-    {
+    public function getDefaultCompileOpts() {
         static $_defaults = array(
             CompileOpt::COMPILE_TYPE => self::COMPILETYPE_FUNCTION,
             CompileOpt::LEADING_SPACES => 0,
@@ -300,16 +282,13 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @return array
      * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
      */
-    protected function parseCompileOpts(array $opts)
-    {
+    protected function parseCompileOpts(array $opts) {
         $opts = $opts + $this->getDefaultCompileOpts();
 
         $compiled = array();
 
-        if (is_int($opts[CompileOpt::COMPILE_TYPE]))
-        {
-            switch($opts[CompileOpt::COMPILE_TYPE])
-            {
+        if (is_int($opts[CompileOpt::COMPILE_TYPE])) {
+            switch ($opts[CompileOpt::COMPILE_TYPE]) {
                 case self::COMPILETYPE_FUNCTION:
                 case self::COMPILETYPE_CLASSMETHOD:
                     $compiled[] = $opts[CompileOpt::COMPILE_TYPE];
@@ -325,12 +304,9 @@ class FunctionTemplate extends AbstractStructureTemplate
 
         compile_type_ok:
 
-        if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0)
-        {
+        if (is_int($opts[CompileOpt::LEADING_SPACES]) && $opts[CompileOpt::LEADING_SPACES] >= 0) {
             $compiled[] = $opts[CompileOpt::LEADING_SPACES];
-        }
-        else
-        {
+        } else {
             throw $this->createInvalidCompileOptionValueException(
                 'CompileOpt::LEADING_SPACES',
                 'Integer >= 0',
@@ -338,12 +314,9 @@ class FunctionTemplate extends AbstractStructureTemplate
             );
         }
 
-        if (is_bool($opts[CompileOpt::INC_COMMENT]))
-        {
+        if (is_bool($opts[CompileOpt::INC_COMMENT])) {
             $compiled[] = $opts[CompileOpt::INC_COMMENT];
-        }
-        else
-        {
+        } else {
             throw $this->createInvalidCompileOptionValueException(
                 'CompileOpt::INC_COMMENT',
                 'Boolean value (defaults to TRUE)',
@@ -351,12 +324,9 @@ class FunctionTemplate extends AbstractStructureTemplate
             );
         }
 
-        if (is_bool($opts[CompileOpt::INC_BODY]))
-        {
+        if (is_bool($opts[CompileOpt::INC_BODY])) {
             $compiled[] = $opts[CompileOpt::INC_BODY];
-        }
-        else
-        {
+        } else {
             throw $this->createInvalidCompileOptionValueException(
                 'CompileOpt::INC_BODY',
                 'Boolean value (defaults to TRUE)',
@@ -373,20 +343,16 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param bool $incBody
      * @return string
      */
-    private function _compileAsFunction($leadingSpaces, $includeComment, $incBody)
-    {
+    private function _compileAsFunction($leadingSpaces, $includeComment, $incBody) {
         $spaces = str_repeat(' ', $leadingSpaces);
 
-        if ($includeComment)
-        {
+        if ($includeComment) {
             $output = sprintf(
                 '%s%s',
                 $this->_buildDocBloc()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
                 $spaces
             );
-        }
-        else
-        {
+        } else {
             $output = $spaces;
         }
 
@@ -404,28 +370,26 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param bool $includeComment
      * @return string
      */
-    private function _compileAsClassMethod($leadingSpaces, $includeComment, $incBody)
-    {
+    private function _compileAsClassMethod($leadingSpaces, $includeComment, $incBody) {
         $spaces = str_repeat(' ', $leadingSpaces);
 
-        if ($includeComment)
-        {
+        if ($includeComment) {
             $output = sprintf(
                 '%s%s',
                 $this->_buildDocBloc()->compile(array(CompileOpt::LEADING_SPACES => $leadingSpaces)),
                 $spaces
             );
-        }
-        else
-        {
+        } else {
             $output = $spaces;
         }
 
-        if ($this->isAbstract())
+        if ($this->isAbstract()) {
             return sprintf("%sabstract %s function %s(%s);\n\n", $output, $this->getScope(), $this->getName(), $this->_buildParameters());
+        }
 
-        if ($this->isStatic())
+        if ($this->isStatic()) {
             $output = sprintf('%sstatic ', $output);
+        }
 
         $output = sprintf('%s%s ', $output, $this->getScope());
 
@@ -444,10 +408,8 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param bool $incBody
      * @return string
      */
-    private function _compileBody($leadingSpaces, $spaces, $incBody)
-    {
-        if ($incBody)
-        {
+    private function _compileBody($leadingSpaces, $spaces, $incBody) {
+        if ($incBody) {
             return sprintf(
                 "\n%s{\n%s\n%s}",
                 $spaces,
@@ -462,36 +424,34 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @return \DCarbone\PHPClassBuilder\Template\Comment\DoubleStarCommentTemplate
      */
-    private function _buildDocBloc()
-    {
+    private function _buildDocBloc() {
         $comment = $this->getDocBlockComment();
 
         $addReturn = true;
 
-        foreach($this->getParameters() as $name=>$parameter)
-        {
+        foreach ($this->getParameters() as $name => $parameter) {
             $addParam = true;
-            foreach($comment->getLines() as $line)
-            {
-                if (preg_match(sprintf('{@param.+\$%s}S', $parameter->getName()), $line))
-                {
+            foreach ($comment->getLines() as $line) {
+                if (preg_match(sprintf('{@param.+\$%s}S', $parameter->getName()), $line)) {
                     $addParam = false;
                     break;
                 }
             }
 
-            if ($addParam)
+            if ($addParam) {
                 $comment->addLine($parameter->getFunctionParameterAnnotation());
+            }
         }
 
-        foreach($comment->getLines() as $line)
-        {
-            if (preg_match('{@return}S', $line))
+        foreach ($comment->getLines() as $line) {
+            if (preg_match('{@return}S', $line)) {
                 $addReturn = false;
+            }
         }
 
-        if ($addReturn && null !== ($retType = $this->getReturnValueType()))
+        if ($addReturn && null !== ($retType = $this->getReturnValueType())) {
             $comment->addLine(sprintf('@return %s', $retType));
+        }
 
         return $comment;
     }
@@ -499,11 +459,9 @@ class FunctionTemplate extends AbstractStructureTemplate
     /**
      * @return string
      */
-    private function _buildParameters()
-    {
+    private function _buildParameters() {
         $params = array();
-        foreach($this->getParameters() as $name=>$parameter)
-        {
+        foreach ($this->getParameters() as $name => $parameter) {
             $params[] = $parameter->compile(array(CompileOpt::COMPILE_TYPE => VariableTemplate::COMPILETYPE_PARAMETER));
         }
         return implode(', ', $params);
@@ -513,12 +471,10 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param int $leadingSpaces
      * @return string
      */
-    private function _buildBody($leadingSpaces)
-    {
+    private function _buildBody($leadingSpaces) {
         $spaces = str_repeat(' ', $leadingSpaces + 4);
         $output = '';
-        foreach($this->getBodyParts() as $line)
-        {
+        foreach ($this->getBodyParts() as $line) {
             $output = sprintf("%s%s%s\n", $output, $spaces, $line);
         }
         return sprintf('%s%s', $output, $this->_buildReturnStatement($spaces));
@@ -528,10 +484,10 @@ class FunctionTemplate extends AbstractStructureTemplate
      * @param int $leadingSpaces
      * @return string
      */
-    private function _buildReturnStatement($leadingSpaces)
-    {
-        if (is_string($this->_returnStatement))
+    private function _buildReturnStatement($leadingSpaces) {
+        if (is_string($this->_returnStatement)) {
             return sprintf("%sreturn %s;\n", $leadingSpaces, $this->_returnStatement);
+        }
 
         return '';
     }

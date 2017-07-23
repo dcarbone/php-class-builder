@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,43 @@
  * limitations under the License.
  */
 
-use DCarbone\PHPClassBuilder\Enum\CompileOpt;
 use DCarbone\PHPClassBuilder\Template\AbstractTemplate;
 
 /**
  * Class AbstractCommentTemplate
  * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-abstract class AbstractCommentTemplate extends AbstractTemplate implements \Countable, \Iterator
-{
+abstract class AbstractCommentTemplate extends AbstractTemplate implements \Countable, \Iterator {
     const NEWLINE_TEST = '{(\r\n)|\n|\r}S';
 
     /** @var string[] */
-    private $_lines = array();
+    private $lines = [];
+
+    /** @var int */
+    private $offset = 0;
+    /** @var bool */
+    private $blank = false;
 
     /**
-     * Constructor
-     *
-     * @param mixed $text
+     * AbstractCommentTemplate constructor.
+     * @param null $text
+     * @param int $offset
+     * @param bool $blank
      */
-    public function __construct($text = null)
-    {
-        if (null !== $text)
+    public function __construct($text = null, $offset = 0, $blank = false) {
+        if (null !== $text) {
             $this->addLine($text);
+        }
+        $this->offset = (int)$offset;
+        $this->blank = (bool)$blank;
     }
 
     /**
-     * @param string|bool|int|double|null $line
+     * @param mixed $line
      * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCommentLineArgumentException
      */
-    public function addLine($line = '')
-    {
-        switch(gettype($line))
-        {
+    public function addLine($line = '') {
+        switch (gettype($line)) {
             case 'NULL':
                 $this->addEmptyLine();
                 break;
@@ -58,19 +62,20 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
                 break;
 
             case 'string':
-                if ($this->testStringForNewlines($line))
+                if ($this->testStringForNewlines($line)) {
                     $this->addLines($this->parseStringInput($line));
-                else
-                    $this->_lines[] = $line;
+                } else {
+                    $this->lines[] = $line;
+                }
                 break;
 
             case 'integer':
             case 'double':
-                $this->_lines[] = (string)$line;
+                $this->lines[] = (string)$line;
                 break;
 
             case 'boolean':
-                $this->_lines[] = $line ? 'TRUE' : 'FALSE';
+                $this->lines[] = $line ? 'TRUE' : 'FALSE';
                 break;
 
             default:
@@ -81,26 +86,22 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     /**
      * Add a blank line to the output.
      */
-    public function addEmptyLine()
-    {
-        $this->_lines[] = '';
+    public function addEmptyLine() {
+        $this->lines[] = '';
     }
 
     /**
      * @return string[]
      */
-    public function getLines()
-    {
-        return $this->_lines;
+    public function getLines() {
+        return $this->lines;
     }
 
     /**
      * @param array $lines
      */
-    public function addLines(array $lines)
-    {
-        foreach($lines as $line)
-        {
+    public function addLines(array $lines) {
+        foreach ($lines as $line) {
             $this->addLine($line);
         }
     }
@@ -108,11 +109,9 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
     /**
      * @param array $lines
      */
-    public function setLines(array $lines)
-    {
-        $this->_lines = array();
-        foreach($lines as $line)
-        {
+    public function setLines(array $lines) {
+        $this->lines = array();
+        foreach ($lines as $line) {
             $this->addLine($line);
         }
     }
@@ -122,9 +121,8 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      * @param bool|true $strict
      * @return integer Returns index of line or -1 if not found
      */
-    public function hasLine($line, $strict = true)
-    {
-        return in_array($line, $this->_lines, (bool)$strict);
+    public function hasLine($line, $strict = true) {
+        return in_array($line, $this->lines, (bool)$strict);
     }
 
     /**
@@ -132,20 +130,17 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      * @param bool|true $strict
      * @return integer Index of line or -1 if not found
      */
-    public function getLineIndex($line, $strict = true)
-    {
-        return array_search($line, $this->_lines, (bool)$strict);
+    public function getLineIndex($line, $strict = true) {
+        return array_search($line, $this->lines, (bool)$strict);
     }
 
     /**
      * @param int $idx
      */
-    public function removeLineByIndex($idx)
-    {
-        if (isset($this->_lines[$idx]))
-        {
-            unset($this->_lines[$idx]);
-            $this->_lines = array_values($this->_lines);
+    public function removeLineByIndex($idx) {
+        if (isset($this->lines[$idx])) {
+            unset($this->lines[$idx]);
+            $this->lines = array_values($this->lines);
         }
     }
 
@@ -153,143 +148,89 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      * @param string $value
      * @param bool|true $strict
      */
-    public function removeLineByValue($value, $strict = true)
-    {
+    public function removeLineByValue($value, $strict = true) {
         $idx = $this->getLineIndex($value, (bool)$strict);
-        if ($idx >= 0)
+        if ($idx >= 0) {
             $this->removeLineByIndex($idx);
+        }
     }
 
     /**
      * Clear out comment body
      */
-    public function clear()
-    {
-        $this->_lines = array();
+    public function clear() {
+        $this->lines = array();
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getDefaultCompileOpts()
-    {
-        static $_defaults = array(
-            CompileOpt::LEADING_SPACES => 4,
-            CompileOpt::OUTPUT_BLANK_COMMENT => false
-        );
-
-        return $_defaults;
+    public function getOffset() {
+        return $this->offset;
     }
 
     /**
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
+     * @param int $offset
      */
-    public function count()
-    {
-        return count($this->_lines);
+    public function setOffset($offset) {
+        $this->offset = $offset;
     }
 
     /**
-     * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
+     * @return bool
      */
-    public function current()
-    {
-        return current($this->_lines);
+    public function isBlank() {
+        return $this->blank;
     }
 
     /**
-     * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
+     * @param bool $blank
      */
-    public function next()
-    {
-        next($this->_lines);
+    public function setBlank($blank) {
+        $this->blank = (bool)$blank;
     }
 
     /**
-     * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     * @return int
      */
-    public function key()
-    {
-        return key($this->_lines);
+    public function count() {
+        return count($this->lines);
     }
 
     /**
-     * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
+     * @return mixed
      */
-    public function valid()
-    {
-        return key($this->_lines) !== null;
+    public function current() {
+        return current($this->lines);
+    }
+
+    public function next() {
+        next($this->lines);
     }
 
     /**
-     * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
+     * @return int|null|string
      */
-    public function rewind()
-    {
-        reset($this->_lines);
+    public function key() {
+        return key($this->lines);
     }
 
     /**
-     * @param array $opts
-     * @return array
-     * @throws \DCarbone\PHPClassBuilder\Exception\InvalidCompileOptionValueException
+     * @return bool
      */
-    protected function parseCompileOpts(array $opts)
-    {
-        $opts = $opts + $this->getDefaultCompileOpts();
+    public function valid() {
+        return key($this->lines) !== null;
+    }
 
-        $compiled = array();
-
-        if (isset($opts[CompileOpt::LEADING_SPACES])
-            && is_int($opts[CompileOpt::LEADING_SPACES])
-            && $opts[CompileOpt::LEADING_SPACES] >= 0)
-        {
-            $compiled[] = $opts[CompileOpt::LEADING_SPACES];
-        }
-        else
-        {
-            throw $this->createInvalidCompileOptionValueException(
-                'CompileOpt::LEADING_SPACES',
-                'integer >= 0',
-                $opts[CompileOpt::LEADING_SPACES]
-            );
-        }
-
-        if (isset($opts[CompileOpt::OUTPUT_BLANK_COMMENT])
-            && is_bool($opts[CompileOpt::OUTPUT_BLANK_COMMENT]))
-        {
-            $compiled[] = $opts[CompileOpt::OUTPUT_BLANK_COMMENT];
-        }
-        else
-        {
-            throw $this->createInvalidCompileOptionValueException(
-                'CompileOpt:OUTPUT_BLANK_COMMENT',
-                'boolean',
-                $opts[CompileOpt::OUTPUT_BLANK_COMMENT]
-            );
-        }
-
-        return $compiled;
+    public function rewind() {
+        reset($this->lines);
     }
 
     /**
      * @param string $line
      * @return bool
      */
-    protected function testStringForNewlines($line)
-    {
+    protected function testStringForNewlines($line) {
         return (bool)preg_match(self::NEWLINE_TEST, $line);
     }
 
@@ -297,8 +238,7 @@ abstract class AbstractCommentTemplate extends AbstractTemplate implements \Coun
      * @param string $line
      * @return array
      */
-    protected function parseStringInput($line)
-    {
+    protected function parseStringInput($line) {
         return preg_split(self::NEWLINE_TEST, $line);
     }
 }

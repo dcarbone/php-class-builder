@@ -1,7 +1,7 @@
-<?php namespace DCarbone\PHPClassBuilder\Enum;
+<?php namespace DCarbone\PHPClassBuilder\Tests\Template;
 
 /*
- * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
+use DCarbone\PHPClassBuilder\Template\ClassFileTemplate;
+use PHPUnit\Framework\TestCase;
+
 /**
- * Class Options
- * @package DCarbone\PHPClassBuilder\Enum
+ * Class FileTemplateTest
+ * @package DCarbone\PHPClassBuilder\Tests\Template
  */
-abstract class CompileOpt {
-    const COMPILE_TYPE = 0;
-    const LEADING_SPACES = 1;
-    const INC_COMMENT = 2;
-    const INC_DEFAULT_VALUE = 3;
-    const INC_BODY = 4;
-    const IN_FILE = 5;
-    const OUTPUT_BLANK_COMMENT = 6;
+class FileTemplateTest extends TestCase {
+    public function testCanConstructTemplate() {
+        $file = new ClassFileTemplate();
+        $this->assertInstanceOf('\\DCarbone\\PHPClassBuilder\\Template\\ClassFileTemplate', $file);
+    }
 }

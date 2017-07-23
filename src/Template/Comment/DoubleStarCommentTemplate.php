@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPClassBuilder\Template\Comment;
 
 /*
- * Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+ * Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
  * Class DoubleStarCommentTemplate
  * @package DCarbone\PHPClassBuilder\Template\Comment
  */
-class DoubleStarCommentTemplate extends AbstractCommentTemplate
-{
+class DoubleStarCommentTemplate extends AbstractCommentTemplate {
+
     /** @var bool */
     private $_useBang = false;
 
@@ -31,32 +31,28 @@ class DoubleStarCommentTemplate extends AbstractCommentTemplate
     /**
      * @return bool
      */
-    public function usesBang()
-    {
+    public function usesBang() {
         return $this->_useBang;
     }
 
     /**
      * @param bool|true $useBang
      */
-    public function setUseBang($useBang = true)
-    {
+    public function setUseBang($useBang = true) {
         $this->_useBang = (bool)$useBang;
     }
 
     /**
      * @param bool|true $singleLineOutput
      */
-    public function setSingleLineOutput($singleLineOutput = true)
-    {
+    public function setSingleLineOutput($singleLineOutput = true) {
         $this->_singleLineOutput = (bool)$singleLineOutput;
     }
 
     /**
      * @return bool
      */
-    public function onSingleLine()
-    {
+    public function onSingleLine() {
         return $this->_singleLineOutput;
     }
 
@@ -64,22 +60,21 @@ class DoubleStarCommentTemplate extends AbstractCommentTemplate
      * @param array $opts
      * @return string
      */
-    public function compile(array $opts = array())
-    {
-        list($leadingSpaces, $outputBlank) = $this->parseCompileOpts($opts);
+    public function compile(array $opts = []) {
 
-        if (false === $outputBlank && 0 === count($this))
+        if (false === $this->isBlank()) {
             return '';
+        }
 
-        $spaces = str_repeat(' ', $leadingSpaces);
+        $spaces = str_repeat(' ', $this->getOffset());
         $lines = $this->getLines();
 
-        if ($this->onSingleLine())
+        if ($this->onSingleLine()) {
             return sprintf("%s/**%s %s */\n", $spaces, $this->usesBang() ? '!' : '', reset($lines));
+        }
 
         $output = sprintf("%s/**%s\n", $spaces, $this->usesBang() ? '!' : '');
-        foreach($lines as $line)
-        {
+        foreach ($lines as $line) {
             $output = sprintf("%s%s * %s\n", $output, $spaces, $line);
         }
         return sprintf("%s%s */\n", $output, $spaces);
